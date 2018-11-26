@@ -1,0 +1,30 @@
+{
+  "name": "artspace-cs50",
+  "version": "0.1.0",
+  "description": "A collaborative canvas.",
+  "engines": {
+    "node": "6.x"
+  },
+  "main": "artgrid.html",
+  "scripts": {
+    "start": "node artgridserver.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+
+  },
+  "devDependencies": {
+    "request": "^2.81.0",
+    "tape": "^4.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.heroku.com/tranquil-falls-47532.git"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "license": "Ben Dreier"
+}
