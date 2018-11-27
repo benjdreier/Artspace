@@ -11,6 +11,8 @@
     "test": "node test.js"
   },
   "dependencies": {
+    "express": "^4.16.4",
+    "node-static": "^0.7.11",
     "websocket": "^1.0.28"
   },
   "devDependencies": {

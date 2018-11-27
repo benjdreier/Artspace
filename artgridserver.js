@@ -1,5 +1,6 @@
 var WebSocketServer = require('websocket').server;
 var http = require('http');
+var static = require('node-static');
 
 var clients = [];
 
@@ -18,11 +19,17 @@ var grid_data = [[0,0,0,0,0,0],
 				 [0,0,1,1,0,0],
 				 [0,0,0,0,0,0],]
 
+let port = process.env.PORT || 8000;
+var file = new static.Server();
+
 var server = http.createServer(function(request, response) {
 	//not an http server so we don't care, i guess
+	request.addListener('end', function() {
+		file.serve(request, response);
+	}).resume();
 });
-server.listen(8000, function() {
-	console.log((new Date()) + "Server is listening on port 8000");
+server.listen(port, function() {
+	console.log((new Date()) + "Server is listening on port " + port);
 });
 
 wsServer = new WebSocketServer({
