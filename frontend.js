@@ -19,7 +19,10 @@ let scale = function(){return Math.pow(2, zoom);}
 // we want to display the mode user-friendily (?).
 let MODES = ["Move", "Draw"];
 var mode = 0;
-var grid_data;
+var grid;
+
+// Number of active users
+var currentUsers = 0;
 
 // Do initial websocket stuff
 
@@ -39,7 +42,14 @@ if (!window.WebSocket) {
 // open connection
 // fucko
 //let port = process.env.PORT || 8000;
+
+// Connection via heroku
 var connection = new WebSocket('wss://damp-savannah-54651.herokuapp.com');
+
+// TEST CONNECTION
+if(!connection){
+	connection = new WebSocket('ws://localhost:8000');
+}
 
 connection.onopen = function(){
 	// Some stuff
@@ -64,8 +74,14 @@ connection.onmessage = function(message){
     	return;
     }
     if(json.type == "grid"){
-    	grid_data = json.grid;
-    	drawGrid(grid_data);
+    	grid = json.grid;
+    	drawGrid();
+    }
+    else if(json.type == "clients"){
+    	console.log("Client update");
+    	console.log(json);
+    	currentUsers = json.number;
+    	drawGrid();
     }
 }
 
@@ -79,10 +95,10 @@ canvas.addEventListener('mousedown', function(e){
 		iX = Math.floor(gridCoords.x / DEFAULT_SIZE);
 		iY = Math.floor(gridCoords.y / DEFAULT_SIZE);
 		console.log(iX, iY);
-		if(iY>=0 && iY<grid_data.length){
-			updateGrid(grid_data, iX, iY, 1);//1-grid_data[iY][iX]);
+		if(iY>=0 && iY<grid.length){
+			updateGrid(grid, iX, iY, 1-grid[iY][iX]);
 		}
-		drawGrid(grid_data);
+		drawGrid();
 	}
 });
 window.addEventListener('mouseup', function(e){
@@ -98,12 +114,12 @@ window.addEventListener('mousemove', function(e){
 		origin.x -= dx;
 		origin.y -= dy;
 
-		drawGrid(grid_data);
+		drawGrid();
 	}
 });
 canvas.addEventListener("wheel", function(e){
 	zoomIntoPoint(e.deltaY/100, e.clientX, e.clientY);
-	drawGrid(grid_data);
+	drawGrid();
 	// Prevent whole page from scrolling
 	e.preventDefault();
 }, false);
@@ -113,14 +129,14 @@ window.addEventListener("keydown", function(e){
 	if(e.code == "Space"){
 		// Cycle modes
 		mode = (mode + 1) % MODES.length;
-		console.log(MODES[mode]);
+		drawGrid();
 	}
 })
 
 function updateGrid(grid, x, y, value){
 	grid[y][x] = value;
 
-	var json = JSON.stringify({type:"update", x: x, y: y, value: value});
+	var json = JSON.stringify({type:"gridUpdate", x: x, y: y, value: value});
 	console.log(json);
 
 	connection.send(json);
@@ -147,7 +163,7 @@ function toGridCoords(domX, domY){
 	return {x: (cX + origin.x)/scale(), y: (cY + origin.y)/scale()};
 }
 
-function drawGrid(grid){
+function drawGrid(){
 	clear();
 
 	// Higher zoom levels will make the squares bigger
@@ -203,6 +219,10 @@ function drawGrid(grid){
 			}
 		}
 	}
+
+	// Draw some informational stuff
+	ctx.fillText("Users: " + currentUsers, 5, 15);
+	ctx.fillText("Mode: " + MODES[mode], 5, 25);
 }
 
 function clear(){

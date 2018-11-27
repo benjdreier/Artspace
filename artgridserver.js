@@ -7,17 +7,18 @@ var clients = [];
 //This is where the grid will live. It should recall the configuration
 //from some database eventually, instead, of blanking it out with each
 //refresh.
-// var grid_data = new Array(100);
-// for (var i = 0; i < grid_data.length; i++) {
-// 	grid_data[i] = new Array(100);
-// }
+var grid_data = new Array(100);
+for (var i = 0; i < grid_data.length; i++) {
+	grid_data[i] = new Array(100);
+}
 
-var grid_data = [[0,0,0,0,0,0],
-				 [0,1,0,0,1,0],
-				 [0,0,0,0,0,0],
-				 [0,1,0,0,1,0],
-				 [0,0,1,1,0,0],
-				 [0,0,0,0,0,0],]
+
+// var grid_data = [[0,0,0,0,0,0],
+// 				 [0,1,0,0,1,0],
+// 				 [0,0,0,0,0,0],
+// 				 [0,1,0,0,1,0],
+// 				 [0,0,1,1,0,0],
+// 				 [0,0,0,0,0,0],]
 
 let port = process.env.PORT || 8000;
 var file = new static.Server();
@@ -36,6 +37,16 @@ wsServer = new WebSocketServer({
 	httpServer: server
 });
 
+function updateClients(){
+	for (var i=0; i<clients.length; i++) {
+		clientJson = JSON.stringify({
+			type: "clients",
+			number: clients.length
+		});
+		clients[i].sendUTF(clientJson);
+	}
+}
+
 wsServer.on('request', function(request) {
 	console.log("Connection from origin " + request.origin);
 	var connection = request.accept(null, request.origin);
@@ -45,6 +56,9 @@ wsServer.on('request', function(request) {
 	let gridJson = JSON.stringify({type: "grid", grid: grid_data});
 	connection.sendUTF(gridJson);
 
+	//Also send new number (for now) of clients
+	updateClients();
+
 	//Handle user communication
 	connection.on('message', function(message){
 		//process websocket message
@@ -53,7 +67,7 @@ wsServer.on('request', function(request) {
 		var json = JSON.parse(message.utf8Data);
 		console.log(json);
 
-		if(json.type == "update"){
+		if(json.type == "gridUpdate"){
 			// Update the grid in server memory
 			// TODO: validate
 			
@@ -73,6 +87,9 @@ wsServer.on('request', function(request) {
 	});
 
 	connection.on('close', function(connection) {
-
+		console.log("disconnection");
+		// get rid of client
+		clients.splice(clients.indexOf(connection), 1);
+		updateClients();
 	});
 });
