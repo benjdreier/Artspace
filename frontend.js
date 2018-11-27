@@ -37,7 +37,7 @@ if (!window.WebSocket) {
 }
 
 // open connection
-// is this updating?
+// fucko
 //let port = process.env.PORT || 8000;
 var connection = new WebSocket('ws://damp-savannah-54651.herokuapp.com');
 
