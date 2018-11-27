@@ -8,11 +8,12 @@ var mouseDown = false;
 var clickedPoint = {x:0, y:0};
 // This is the point in gridspace that appears at the top-left
 // corner of the screen.
-var origin = {x:0, y:0};
+// By default, i'll set it roughly in the middle of a 100x100 grid
+var origin = {x:2200, y:2200};
 // Default pizel size
 let DEFAULT_SIZE = 100;
 // Default zoom level
-var zoom = 0;
+var zoom = -1;
 let scale = function(){return Math.pow(2, zoom);}
 // Not sure how to implement this yet. This seems safe. maybe.
 // This array is really just a formality but will be good when
