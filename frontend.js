@@ -14,6 +14,10 @@ var origin = {x:2200, y:2200};
 let DEFAULT_SIZE = 100;
 // Default zoom level
 var zoom = -1;
+
+// Change in a sec
+let MAX_ZOOM = 2;
+let MIN_ZOOM = -4;
 let scale = function(){return Math.pow(2, zoom);}
 // Not sure how to implement this yet. This seems safe. maybe.
 // This array is really just a formality but will be good when
@@ -119,7 +123,7 @@ window.addEventListener('mousemove', function(e){
 	}
 });
 canvas.addEventListener("wheel", function(e){
-	zoomIntoPoint(-1*e.deltaY/100, e.clientX, e.clientY);
+	zoomIntoPoint(-1*e.deltaY/300, e.clientX, e.clientY);
 	drawGrid();
 	// Prevent whole page from scrolling
 	e.preventDefault();
@@ -144,17 +148,20 @@ function updateGrid(grid, x, y, value){
 }
 
 function zoomIntoPoint(amount, pX, pY){
+	// Don't if you'll be overzooming
+	// But allows for fixing
+	if((amount>0 && zoom+amount>MAX_ZOOM) || (amount<0 && zoom+amount<MIN_ZOOM)) return;
+
 	preGridCoords = toGridCoords(pX, pY);
 	zoom += amount;
 	dScale = Math.pow(2, amount);
-	console.log("dScale: ", dScale);
+	console.log("zoom: ", zoom);
 	postGridCoords = toGridCoords(pX, pY);
 
 	// adjust origin to preserve fixed point
 
 	origin.x -= (postGridCoords.x - preGridCoords.x) * scale();
 	origin.y -= (postGridCoords.y - preGridCoords.y) * scale();
-
 }
 
 function toGridCoords(domX, domY){
@@ -198,6 +205,7 @@ function drawGrid(){
 
 	// Now that those are calculated, iterate through the subset
 	// of grid and draw it. 
+	ctx.lineWidth = 0.5;
 
 	for(let y=topIndex; y<=bottomIndex; y++){
 		for(let x=leftIndex; x<=rightIndex; x++){
