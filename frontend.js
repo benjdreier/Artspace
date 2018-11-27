@@ -119,7 +119,7 @@ window.addEventListener('mousemove', function(e){
 	}
 });
 canvas.addEventListener("wheel", function(e){
-	zoomIntoPoint(e.deltaY/100, e.clientX, e.clientY);
+	zoomIntoPoint(-1*e.deltaY/100, e.clientX, e.clientY);
 	drawGrid();
 	// Prevent whole page from scrolling
 	e.preventDefault();
