@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "A collaborative canvas.",
   "engines": {
-    "node": "6.x"
+    "node": "11.x"
   },
   "main": "artgrid.html",
   "scripts": {
@@ -11,7 +11,7 @@
     "test": "node test.js"
   },
   "dependencies": {
-
+    "websocket": "^1.0.28"
   },
   "devDependencies": {
     "request": "^2.81.0",
@@ -19,12 +19,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://git.heroku.com/tranquil-falls-47532.git"
+    "url": "https://git.heroku.com/damp-savannah-54651.git"
   },
   "keywords": [
     "node",
-    "heroku",
-    "express"
+    "heroku"
   ],
   "license": "Ben Dreier"
 }
