@@ -4,11 +4,10 @@ var static = require('node-static');
 const { Client } = require('pg');
 
 const client = new Client({
-	connectionString: "postgres:\/\/nfjwjvzwhkhsgo:05fbef5c6123f649707e9928b3de208634f05839f495fbc430793cc294108838@ec2-54-197-234-33.compute-1.amazonaws.com:5432/dc506ecjc8c0ib",
-//process.env.DATABASE_URL,
-	ssl: true,
+	connectionString: process.env.DATABASE_URL , //process.env.DATABASE_URL || "postgres:\/\/nfjwjvzwhkhsgo:05fbef5c6123f649707e9928b3de208634f05839f495fbc430793cc294108838@ec2-54-197-234-33.compute-1.amazonaws.com:5432/dc506ecjc8c0ib"
+	ssl: true
 });
-console.log(process.env.DATABASE_URL);
+console.log(client.connectionString);
 
 client.connect();
 
@@ -38,12 +37,9 @@ var grid_data;
 client.query("SELECT grid_data FROM grids ORDER BY timestamp", (err, res) => {
 	console.log("Here is that data u asked for!");
 	if (err) throw err;
-	for (let row of res.rows) {
-		console.log(row);
-		if(row["grid_data"][0]){
-			grid_data = row["grid_data"][0];
-			console.log(grid_data);
-		}
+	if(res.rows[0]["grid_data"][0]){
+		grid_data = res.rows[0]["grid_data"];
+		console.log(grid_data);
 	}
 });
 
