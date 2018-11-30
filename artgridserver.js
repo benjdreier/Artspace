@@ -34,7 +34,7 @@ var clients = [];
 
 var grid_data;
 
-client.query("SELECT grid_data FROM grids ORDER BY timestamp", (err, res) => {
+client.query("SELECT grid_data FROM grids ORDER BY timestamp DESC", (err, res) => {
 	console.log("Here is that data u asked for!");
 	if (err) throw err;
 	if(res.rows[0]["grid_data"][0]){
