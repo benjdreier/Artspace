@@ -15,7 +15,6 @@ let DEFAULT_SIZE = 100;
 // Default zoom level
 var zoom = -1;
 
-// Change in a sec
 let MAX_ZOOM = 2;
 let MIN_ZOOM = -4;
 let scale = function(){return Math.pow(2, zoom);}
@@ -150,6 +149,7 @@ function updateGrid(grid, x, y, value){
 function zoomIntoPoint(amount, pX, pY){
 	// Don't if you'll be overzooming
 	// But allows for fixing
+	// TODO: Stop scrolling smoothly.
 	if((amount>0 && zoom+amount>MAX_ZOOM) || (amount<0 && zoom+amount<MIN_ZOOM)) return;
 
 	preGridCoords = toGridCoords(pX, pY);
