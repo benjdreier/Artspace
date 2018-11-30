@@ -75,7 +75,7 @@ if (!window.WebSocket) {
 //let port = process.env.PORT || 8000;
 
 // Connection via heroku
-var connection = new WebSocket('wss://damp-savannah-54651.herokuapp.com');
+var connection = null;//new WebSocket('wss://damp-savannah-54651.herokuapp.com');
 
 // TEST CONNECTION
 if(!connection){
@@ -279,6 +279,15 @@ function drawGrid(){
 	// Draw some informational stuff
 	ctx.fillText("Users: " + currentUsers, 5, 15);
 	ctx.fillText("Mode: " + MODES[mode], 5, 25);
+}
+
+let exportButton = document.getElementById("button-export");
+exportButton.addEventListener("click", exportGrid);
+
+function exportGrid(){
+	console.log("Requesting export....");
+	var json = JSON.stringify({type:"export"});
+	connection.send(json);
 }
 
 function clear(){

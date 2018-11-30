@@ -2,6 +2,7 @@ var WebSocketServer = require('websocket').server;
 var http = require('http');
 var static = require('node-static');
 const { Client } = require('pg');
+var Jimp = require('Jimp');
 
 const client = new Client({
 	connectionString: process.env.DATABASE_URL,
@@ -31,7 +32,12 @@ var clients = [];
 // var grid_data = new Array(300);
 // for (var i = 0; i < grid_data.length; i++) {
 // 	grid_data[i] = new Array(300);
+// 	for (var j = 0; j < grid_data[0].length; j++) {
+// 		grid_data[i][j] = "#FFFFFF";
+// 	}
 // }
+// updateDB();
+// return;
 
 var grid_data;
 
@@ -41,6 +47,8 @@ client.query("SELECT grid_data FROM grids ORDER BY timestamp DESC", (err, res) =
 	if(res.rows[0]["grid_data"][0]){
 		grid_data = res.rows[0]["grid_data"];
 	}
+	console.log("tryna export....");
+	exportGrid();
 });
 
 // Every 10 minutes
@@ -64,6 +72,7 @@ var server = http.createServer(function(request, response) {
 		file.serve(request, response);
 	}).resume();
 });
+
 server.listen(port, function() {
 	console.log((new Date()) + "Server is listening on port " + port);
 });
@@ -79,6 +88,34 @@ function updateClients(){
 			number: clients.length
 		});
 		clients[i].sendUTF(clientJson);
+	}
+}
+
+function exportGrid(){
+	// Assuming 8 colors max
+	let image = new Jimp(grid_data[0].length, grid_data.length, function(err, image){
+		if (err) throw err;
+		grid_data.forEach((row, y) => {
+			row.forEach((colorString, x) => {
+				console.log("str: "+colorString);
+				console.log("hex: "+strToHex(colorString));
+				image.setPixelColor(strToHex(colorString), x, y);
+			});
+		});
+		image.write('test.png', (err) => {
+			if (err) throw err;
+		});
+	});
+
+	// little helper function to get the right hex value
+	function strToHex(str){
+		if(str == 1){
+			return 0x000000ff;
+		}
+		if(str == 0) return 0xffffffff;
+		if(!str) return 0xffffffff;
+		// Splice off the first #, then parse as a hexadecimal int.
+		return parseInt(str.substring(1)+"FF", 16);
 	}
 }
 
@@ -107,16 +144,19 @@ wsServer.on('request', function(request) {
 			// TODO: validate
 			
 			grid_data[json.y][json.x] = json.value;
+			let gridJson = JSON.stringify({type: "grid", grid: grid_data});
+			//broadcast the message
+			for (var i=0; i<clients.length; i++) {
+				clients[i].sendUTF(gridJson);//the message//);
+			}
+		}
+		else if(json.type == "export"){
+			exportGrid();
 		}
 		else{
 			console.log("Unexpected json type");
+			console.log(json.type);
 			return;
-		}
-
-		let gridJson = JSON.stringify({type: "grid", grid: grid_data});
-		//broadcast the message
-		for (var i=0; i<clients.length; i++) {
-			clients[i].sendUTF(gridJson);//the message//);
 		}
 
 	});
