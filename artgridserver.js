@@ -7,7 +7,8 @@ const client = new Client({
 	connectionString: process.env.DATABASE_URL , //process.env.DATABASE_URL || "postgres:\/\/nfjwjvzwhkhsgo:05fbef5c6123f649707e9928b3de208634f05839f495fbc430793cc294108838@ec2-54-197-234-33.compute-1.amazonaws.com:5432/dc506ecjc8c0ib"
 	ssl: true
 });
-console.log(client.connectionString);
+console.log("Database URL:");
+console.log(process.env.DATABASE_URL);
 
 client.connect();
 
@@ -39,7 +40,6 @@ client.query("SELECT grid_data FROM grids ORDER BY timestamp DESC", (err, res) =
 	if (err) throw err;
 	if(res.rows[0]["grid_data"][0]){
 		grid_data = res.rows[0]["grid_data"];
-		console.log(grid_data);
 	}
 });
 
