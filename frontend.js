@@ -3,9 +3,20 @@ $(function () {
 
 c = document.getElementById("canvas");
 ctx = c.getContext('2d');
+
+c.width = document.body.clientWidth;
+c.height = document.body.clientHeight;
+
+window.addEventListener('resize', function(e){
+	c.width = document.body.clientWidth;
+	c.height = document.body.clientHeight;
+	drawGrid();
+});
+
 var canvasRect = canvas.getBoundingClientRect();
 var mouseDown = false;
 var clickedPoint = {x:0, y:0};
+
 // This is the point in gridspace that appears at the top-left
 // corner of the screen.
 // By default, i'll set it roughly in the middle of a 100x100 grid
@@ -23,6 +34,22 @@ let scale = function(){return Math.pow(2, zoom);}
 // we want to display the mode user-friendily (?).
 let MODES = ["Move", "Draw"];
 var mode = 0;
+
+var brushColor = "#000000";
+let COLORS = ["#000000", "#0000FF", "#FF0000", "#00FF00"];
+let DEFAULT_COLOR = "#FFFFFF";
+
+var colorButtons = document.getElementsByClassName("button-color");
+for(var i=0; i<colorButtons.length; i++){
+	let button = colorButtons[i];
+	let color=i;
+	button.addEventListener("click", function(){
+		brushColor = COLORS[color];
+		console.log("Updated brush color");
+		console.log(brushColor);
+	});
+}
+
 var grid;
 
 // Number of active users
@@ -100,7 +127,20 @@ canvas.addEventListener('mousedown', function(e){
 		iY = Math.floor(gridCoords.y / DEFAULT_SIZE);
 		console.log(iX, iY);
 		if(iY>=0 && iY<grid.length){
-			updateGrid(grid, iX, iY, 1-grid[iY][iX]);
+			console.log("Brush: "+brushColor);
+			console.log("Point: "+grid[iY][iX]);
+			// If trying to apply the same color, clear it.
+			var newValue;
+			if(grid[iY][iX] == brushColor){
+				console.log("same!");
+				newValue = DEFAULT_COLOR;
+			} 
+			else{
+				console.log("different!");
+				newValue = brushColor;
+			}
+			console.log("New: "+newValue);
+			updateGrid(grid, iX, iY, newValue);
 		}
 		drawGrid();
 	}
@@ -223,11 +263,18 @@ function drawGrid(){
 			// Draw gridline
 			ctx.stroke();
 			// Fill square
+			ctx.fillStyle = grid[y][x];
+			//legacy support
 			if(grid[y][x] == 1){
-				ctx.fill();
+				ctx.fillStyle = "#000000";
 			}
+			if(grid[y][x] == 0 || !grid[y][x]){
+				ctx.fillStyle = "#FFFFFF";
+			}
+			ctx.fill();
 		}
 	}
+	ctx.fillStyle="#000000";
 
 	// Draw some informational stuff
 	ctx.fillText("Users: " + currentUsers, 5, 15);

@@ -4,7 +4,7 @@ var static = require('node-static');
 const { Client } = require('pg');
 
 const client = new Client({
-	connectionString: process.env.DATABASE_URL , //process.env.DATABASE_URL || "postgres:\/\/nfjwjvzwhkhsgo:05fbef5c6123f649707e9928b3de208634f05839f495fbc430793cc294108838@ec2-54-197-234-33.compute-1.amazonaws.com:5432/dc506ecjc8c0ib"
+	connectionString: process.env.DATABASE_URL,
 	ssl: true
 });
 console.log("Database URL:");
