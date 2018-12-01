@@ -11,6 +11,7 @@
     "test": "node test.js"
   },
   "dependencies": {
+    "Jimp": "^0.6.0",
     "express": "^4.16.4",
     "jimp": "^0.6.0",
     "node-static": "^0.7.11",
