@@ -4,7 +4,10 @@ var static = require('node-static');
 const { Client } = require('pg');
 var Jimp = require('jimp');
 const express = require('express');
-const app = express();
+//const app = express();
+var HttpDispatcher = require('httpdispatcher');
+var dispatcher = new HttpDispatcher();
+var fs = require('fs');
 
 const client = new Client({
 	connectionString: process.env.DATABASE_URL,
@@ -66,13 +69,58 @@ setInterval(updateDB, UPDATE_INTERVAL);
 // 				 [0,0,0,0,0,0],]
 
 let port = process.env.PORT || 8000;
-//var file = new static.Server();
+var file = new static.Server();
 
 var server = http.createServer(function(request, response) {
-	//not an http server so we don't care, i guess
-	// request.addListener('end', function() {
-	// 	file.serve(request, response);
-	// }).resume();
+	// Handle http requests
+	console.log("fucko");
+	console.log(request.url);
+
+	// Yikes ok this is awful. I would use express for routing but I have to handle http requests and websockets on the same port and I couldn't make websocket endpoints work with express. So I have to route with the stock http server, and I couldn't find a better way than this to make / route to my index file but have nothing else be affected. I tried many ways and this is the only way that worked. Next time maybe i'd start building the server with express, but at this point this is good enough. even though it kind of defeats the purpose of the router in the first place. It works.
+	if(request.url == "/"){
+		console.log("this is it");
+		try {
+			dispatcher.dispatch(request, response);
+		}
+		catch(err){
+			console.log(err);
+		}
+	}
+	else if(request.url == "/export?"){
+		exportGrid(function(){
+			fs.readFile('grids/test.png', function(err, content){
+				if (err) {
+	                response.writeHead(400, {'Content-type':'text/html'})
+	                console.log(err);
+	                response.end("No such file");    
+	            } 
+	            else {
+	                response.setHeader('Content-disposition', 'attachment; filename='+"artspace.png");
+	                response.end(content);
+	            }
+			});
+			//res.download("grids/test.png");
+		});
+	}
+	else{
+		console.log("that aint it");
+		request.addListener('end', function() {
+			file.serve(request, response);
+		}).resume();
+	}
+
+	
+});
+
+dispatcher.onGet("/", function(req, res) {
+	console.log("goin to the index!");
+	// file.serveFile("/public/style.css", 200, {}, req, res);
+	file.serveFile("/artgrid.html", 200, {}, req, res);
+	
+});
+dispatcher.onError(function(req, res) {
+    res.writeHead(403);
+    res.end("Error, the URL doesn't exist");
 });
 
 server.listen(port, function() {
@@ -83,20 +131,20 @@ wsServer = new WebSocketServer({
 	httpServer: server
 });
 
-app.use(express.static("grids"));
-app.use(express.static("public"));
+// app.use(express.static("grids"));
+// app.use(express.static("public"));
 
-app.get('/', (req, res) => {
-	res.sendfile(__dirname + '/artgrid.html');
-});
-app.get('/export', (req, res) => {
-	exportGrid(function(){
-		res.download("grids/test.png");
-	});
-})
-app.listen(3000, function () {
-	console.log("Express running on port 3000");
-});
+// app.get('/', (req, res) => {
+// 	res.sendfile(__dirname + '/artgrid.html');
+// });
+// app.get('/export', (req, res) => {
+// 	exportGrid(function(){
+// 		res.download("grids/test.png");
+// 	});
+// })
+// app.listen(3000, function () {
+// 	console.log("Express running on port 3000");
+// });
 
 function updateClients(){
 	for (var i=0; i<clients.length; i++) {

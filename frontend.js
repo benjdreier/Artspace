@@ -1,3 +1,4 @@
+// This is in the index / directory.
 // This will all only be executed after the page is loaded
 $(function () {
 
@@ -71,16 +72,15 @@ if (!window.WebSocket) {
 }
 
 // open connection
-// fucko
-//let port = process.env.PORT || 8000;
 
 // Connection via heroku
-var connection = null;//new WebSocket('wss://damp-savannah-54651.herokuapp.com');
+var connection = new WebSocket('wss://damp-savannah-54651.herokuapp.com');
 
 // TEST CONNECTION
 if(!connection){
 	connection = new WebSocket('ws://localhost:8000');
 }
+console.log("connection: ", connection);
 
 connection.onopen = function(){
 	// Some stuff
