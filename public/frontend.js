@@ -281,14 +281,14 @@ function drawGrid(){
 	ctx.fillText("Mode: " + MODES[mode], 5, 25);
 }
 
-// let exportButton = document.getElementById("button-export");
-// exportButton.addEventListener("click", exportGrid);
+let exportButton = document.getElementById("button-export");
+exportButton.addEventListener("click", exportGrid);
 
-// function exportGrid(){
-// 	console.log("Requesting export....");
-// 	var json = JSON.stringify({type:"export"});
-// 	connection.send(json);
-// }
+function exportGrid(){
+	console.log("Requesting export....");
+	var json = JSON.stringify({type:"export"});
+	connection.send(json);
+}
 
 function clear(){
 	oldStyle = ctx.fillStyle;

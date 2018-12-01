@@ -3,6 +3,8 @@ var http = require('http');
 var static = require('node-static');
 const { Client } = require('pg');
 var Jimp = require('Jimp');
+const express = require('express');
+const app = express();
 
 const client = new Client({
 	connectionString: process.env.DATABASE_URL,
@@ -47,8 +49,8 @@ client.query("SELECT grid_data FROM grids ORDER BY timestamp DESC", (err, res) =
 	if(res.rows[0]["grid_data"][0]){
 		grid_data = res.rows[0]["grid_data"];
 	}
-	console.log("tryna export....");
-	exportGrid();
+	//console.log("tryna export....");
+	//exportGrid();
 });
 
 // Every 10 minutes
@@ -64,13 +66,13 @@ setInterval(updateDB, UPDATE_INTERVAL);
 // 				 [0,0,0,0,0,0],]
 
 let port = process.env.PORT || 8000;
-var file = new static.Server();
+//var file = new static.Server();
 
 var server = http.createServer(function(request, response) {
 	//not an http server so we don't care, i guess
-	request.addListener('end', function() {
-		file.serve(request, response);
-	}).resume();
+	// request.addListener('end', function() {
+	// 	file.serve(request, response);
+	// }).resume();
 });
 
 server.listen(port, function() {
@@ -79,6 +81,21 @@ server.listen(port, function() {
 
 wsServer = new WebSocketServer({
 	httpServer: server
+});
+
+app.use(express.static("grids"));
+app.use(express.static("public"));
+
+app.get('/', (req, res) => {
+	res.sendfile(__dirname + '/artgrid.html');
+});
+app.get('/export', (req, res) => {
+	exportGrid(function(){
+		res.download("grids/test.png");
+	});
+})
+app.listen(3000, function () {
+	console.log("Express running on port 3000");
 });
 
 function updateClients(){
@@ -91,7 +108,7 @@ function updateClients(){
 	}
 }
 
-function exportGrid(){
+function exportGrid(download){
 	// Assuming 8 colors max
 	let image = new Jimp(grid_data[0].length, grid_data.length, function(err, image){
 		if (err) throw err;
@@ -102,7 +119,9 @@ function exportGrid(){
 				image.setPixelColor(strToHex(colorString), x, y);
 			});
 		});
-		image.write('test.png', (err) => {
+		image.write('grids/test.png', (err) => {
+			console.log("Done.");
+			download();
 			if (err) throw err;
 		});
 	});
@@ -151,7 +170,7 @@ wsServer.on('request', function(request) {
 			}
 		}
 		else if(json.type == "export"){
-			exportGrid();
+			//exportGrid();
 		}
 		else{
 			console.log("Unexpected json type");
