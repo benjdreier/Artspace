@@ -2,7 +2,7 @@ var WebSocketServer = require('websocket').server;
 var http = require('http');
 var static = require('node-static');
 const { Client } = require('pg');
-var Jimp = require('Jimp');
+var Jimp = require('jimp');
 const express = require('express');
 const app = express();
 
