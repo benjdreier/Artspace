@@ -86,7 +86,7 @@ var server = http.createServer(function(request, response) {
 			console.log(err);
 		}
 	}
-	else if(request.url == "/export?"){
+	else if(request.url == "/export"){
 		exportGrid(function(){
 			fs.readFile('grids/test.png', function(err, content){
 				if (err) {
