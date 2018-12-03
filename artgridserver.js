@@ -52,8 +52,6 @@ client.query("SELECT grid_data FROM grids ORDER BY timestamp DESC", (err, res) =
 	if(res.rows[0]["grid_data"][0]){
 		grid_data = res.rows[0]["grid_data"];
 	}
-	//console.log("tryna export....");
-	//exportGrid();
 });
 
 // Every 10 minutes
@@ -216,9 +214,6 @@ wsServer.on('request', function(request) {
 			for (var i=0; i<clients.length; i++) {
 				clients[i].sendUTF(gridJson);//the message//);
 			}
-		}
-		else if(json.type == "export"){
-			//exportGrid();
 		}
 		else{
 			console.log("Unexpected json type");

@@ -145,11 +145,13 @@ canvas.addEventListener('mousedown', function(e){
 		drawGrid();
 	}
 });
-window.addEventListener('mouseup', function(e){
+canvas.addEventListener('mouseup', function(e){
 	mouseDown = false;
 });
-window.addEventListener('mousemove', function(e){
-	gridCoords = toGridCoords(e.clientX, e.clientY);
+canvas.addEventListener('mousemove', function(e){
+	//gridCoords = toGridCoords(e.clientX, e.clientY);
+	console.log("Mouse moved");
+	console.log(mouseDown);
 	if(MODES[mode] == "Move" && mouseDown){
 		//drag the canvas center
 		dx = e.movementX;
@@ -176,6 +178,48 @@ window.addEventListener("keydown", function(e){
 		drawGrid();
 	}
 })
+
+// Handle mobile touch events
+// http://bencentra.com/code/2014/12/05/html5-canvas-touch-events.html
+
+var ongoingTouches = [];
+
+var touchX, touchY = 0;
+
+canvas.addEventListener("touchstart", function(e){
+	e.preventDefault();
+	var touch = e.touches[0];
+	touchX = touch.clientX;
+	touchY = touch.clientY;
+	var mouseEvent = new MouseEvent("mousedown", {
+		clientX: touchX,
+		clientY: touchY
+	});
+	canvas.dispatchEvent(mouseEvent);
+}, false);
+
+canvas.addEventListener("touchmove", function(e){
+	e.preventDefault();
+	//Only look at one touch for now. Zooming can come later.
+	var touch = e.touches[0];
+	e.clientX
+
+	var dX = touch.clientX - touchX;
+	var dY = touch.clientY - touchY;
+	touchX = touch.clientX;
+	touchY = touch.clientY;
+	var moveEvent = new MouseEvent("mousemove", {
+		movementX: dX,
+		movementY: dY,
+		clientX: touchX,
+		clientY: touchY
+	});
+	console.log(moveEvent);
+	canvas.dispatchEvent(moveEvent);
+	console.log(touchX, touchY);
+});
+
+
 
 function updateGrid(grid, x, y, value){
 	grid[y][x] = value;
