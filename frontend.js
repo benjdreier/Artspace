@@ -219,6 +219,29 @@ canvas.addEventListener("touchmove", function(e){
 	console.log(touchX, touchY);
 });
 
+canvas.addEventListener("touchup", function(e){
+	e.preventDefault();
+	var mouseEvent = new MouseEvent("mouseup", {});
+  	canvas.dispatchEvent(mouseEvent);
+})
+
+canvas.addEventListener("touchtap", function(e){
+	e.preventDefault();
+	console.log(e);
+	var touch = e.customData;
+	let oldMode = mode;
+	// Switch to drawing mode
+	mode = 1;
+	// Then send a mousedown event
+	var mouseEvent = new MouseEvent("mousedown", {
+		clientX: touch.touchX,
+		clientY: touch.touchY
+	});
+	canvas.dispatchEvent(mouseEvent);
+	// And then switch back
+	mode = oldMode;
+})
+
 
 
 function updateGrid(grid, x, y, value){
