@@ -20,8 +20,8 @@ var clickedPoint = {x:0, y:0};
 
 // This is the point in gridspace that appears at the top-left
 // corner of the screen.
-// By default, i'll set it roughly in the middle of a 100x100 grid
-var origin = {x:2200, y:2200};
+// By default, place the user right in the middle of the grid. So they know what's going on. 
+var origin = {x:6600, y:6600};
 // Default pizel size
 let DEFAULT_SIZE = 100;
 // Default zoom level
@@ -30,9 +30,8 @@ var zoom = -1;
 let MAX_ZOOM = 2;
 let MIN_ZOOM = -4;
 let scale = function(){return Math.pow(2, zoom);}
-// Not sure how to implement this yet. This seems safe. maybe.
-// This array is really just a formality but will be good when
-// we want to display the mode user-friendily (?).
+
+// This seems safe. maybe.
 let MODES = ["Move", "Draw"];
 var mode = 0;
 
@@ -150,8 +149,6 @@ canvas.addEventListener('mouseup', function(e){
 });
 canvas.addEventListener('mousemove', function(e){
 	//gridCoords = toGridCoords(e.clientX, e.clientY);
-	console.log("Mouse moved");
-	console.log(mouseDown);
 	if(MODES[mode] == "Move" && mouseDown){
 		//drag the canvas center
 		dx = e.movementX;
@@ -170,8 +167,6 @@ canvas.addEventListener("wheel", function(e){
 	e.preventDefault();
 }, false);
 window.addEventListener("keydown", function(e){
-	// Space bar
-	console.log(e);
 	if(e.code == "Space"){
 		// Cycle modes
 		mode = (mode + 1) % MODES.length;
@@ -184,39 +179,93 @@ window.addEventListener("keydown", function(e){
 
 var ongoingTouches = [];
 
-var touchX, touchY = 0;
-
 canvas.addEventListener("touchstart", function(e){
 	e.preventDefault();
-	var touch = e.touches[0];
-	touchX = touch.clientX;
-	touchY = touch.clientY;
+	// The latest touch
+	var touch = e.touches[e.touches.length-1];
+	e.touches[e.touches.length-1].lastX = touch.clientX;
+	e.touches[e.touches.length-1].lastY = touch.clientY;
 	var mouseEvent = new MouseEvent("mousedown", {
-		clientX: touchX,
-		clientY: touchY
+		clientX: touch.clientX,
+		clientY: touch.clientY
 	});
 	canvas.dispatchEvent(mouseEvent);
 }, false);
 
 canvas.addEventListener("touchmove", function(e){
 	e.preventDefault();
-	//Only look at one touch for now. Zooming can come later.
-	var touch = e.touches[0];
-	e.clientX
+	if(e.touches.length == 1){
+		// Move the canvas
+		var touch = e.touches[0];
 
-	var dX = touch.clientX - touchX;
-	var dY = touch.clientY - touchY;
-	touchX = touch.clientX;
-	touchY = touch.clientY;
-	var moveEvent = new MouseEvent("mousemove", {
-		movementX: dX,
-		movementY: dY,
-		clientX: touchX,
-		clientY: touchY
-	});
-	console.log(moveEvent);
-	canvas.dispatchEvent(moveEvent);
-	console.log(touchX, touchY);
+		var dX = touch.clientX - touchX;
+		var dY = touch.clientY - touchY;
+		touchX = touch.clientX;
+		touchY = touch.clientY;
+		var moveEvent = new MouseEvent("mousemove", {
+			movementX: dX,
+			movementY: dY,
+			clientX: touchX,
+			clientY: touchY
+		});
+		canvas.dispatchEvent(moveEvent);
+	}
+	else if(e.touches.length > 1){
+		// Ok now let's attempt to Zoom. Let's do some math.
+		var touch1 = e.touches[0];
+		var touch2 = e.touches[1];
+
+		// Respective movements of touches in screen coords
+		let vx1 = touch1.clientX - touch1.lastX;
+		let vy1 = touch1.clientY - touch1.lastY;
+		let vx2 = touch2.clientX - touch2.lastX;
+		let vy2 = touch2.clientY - touch2.lastY;
+		// Update last position
+		touch1.lastX = touch1.clientX;
+		touch1.lastY = touch1.clientY;
+		touch2.lastX = touch2.clientX;
+		touch2.lastY = touch2.clientY;
+
+		// Displacement between touches in screen coords
+		let dx1 = touch2.clientX - touch1.clientX
+		let dy1 = touch2.clientY - touch1.clientY;
+		
+		// Apply the effect from movement 1 and movement 2 in succession
+		// Start with the first movement
+
+		let distance1 = Math.sqrt(Math.pow(dx1, 2) + Math.pow(dy1, 2));
+		// Unit vector at touch1 poiting to touch2
+		let dux = dx1 / distance1;
+		let duy = dy1 / distance1;
+
+		// v1 dotted with -du to get the magnitude of the component of p1's movement in the direction away from p2
+		let mvmtAway1 = (vx1 * (-1*dux)) + (vy1 * (-1*duy));
+		let dscale1 = (mvmtAway1 / distance) + 1;
+
+		// Position of touch 2 in grid coords
+		let pos2 = toGridCoords(touch2.clientX, touch2.clientY);
+
+		// Zeeping point 2 fixed, zoom in.
+		zoomIntoPoint(Math.log2(dscale1), pos2.x, pos2.y);
+
+		// Now for the second one, we need the updated distance and position
+		// du stays the same (I think)
+		// Calulate new displacement
+		let dx2 = dx1 + vx1;
+		let dy2 = dy1 + vy1;
+		let distance2 = Math.sqrt(Math.pow(dx2, 2) + Math.pow(dy2, 2));
+
+		let mvmtAway2 = (vx2 * dux) + (vy2 * duy);
+		let dscale2 = (mvmtAway2 / distance) + 1;
+
+		// Position of slightly moved touch 1 in grid coords
+		let pos1 = toGridCoords(touch1.clientX + vx1, touch1.clientY + vy1);
+		zoomIntoPoint(Math.log2(dscale2), pos1.x, pos1.y);
+
+		// Sure hope this works.
+
+	}
+	
 });
 
 canvas.addEventListener("touchup", function(e){
@@ -256,7 +305,6 @@ function updateGrid(grid, x, y, value){
 function zoomIntoPoint(amount, pX, pY){
 	// Don't if you'll be overzooming
 	// But allows for fixing
-	// TODO: Stop scrolling smoothly.
 	if((amount>0 && zoom+amount>MAX_ZOOM) || (amount<0 && zoom+amount<MIN_ZOOM)) return;
 
 	preGridCoords = toGridCoords(pX, pY);
@@ -307,9 +355,6 @@ function drawGrid(){
 	rightIndex = Math.min(rightIndex, grid[0].length-1);
 	bottomIndex = Math.min(bottomIndex, grid.length-1);
 
-
-	console.log(leftIndex, rightIndex, topIndex, bottomIndex);
-
 	// Now that those are calculated, iterate through the subset
 	// of grid and draw it. 
 	ctx.lineWidth = 0.5;
@@ -342,7 +387,6 @@ function drawGrid(){
 		}
 	}
 	ctx.fillStyle="#000000";
-
 	// Draw some informational stuff
 	ctx.fillText("Users: " + currentUsers, 5, 15);
 	ctx.fillText("Mode: " + MODES[mode], 5, 25);
