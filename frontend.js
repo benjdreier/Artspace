@@ -263,19 +263,19 @@ canvas.addEventListener("touchmove", function(e){
 		// Zeeping point 2 fixed, zoom in.
 		zoomIntoPoint(Math.log2(dscale1), pos2.x, pos2.y);
 
-		// Now for the second one, we need the updated distance and position
-		// du stays the same (I think)
-		// Calulate new displacement
-		let dx2 = dx1 + vx1;
-		let dy2 = dy1 + vy1;
-		let distance2 = Math.sqrt(Math.pow(dx2, 2) + Math.pow(dy2, 2));
+		// // Now for the second one, we need the updated distance and position
+		// // du stays the same (I think)
+		// // Calulate new displacement
+		// let dx2 = dx1 + vx1;
+		// let dy2 = dy1 + vy1;
+		// let distance2 = Math.sqrt(Math.pow(dx2, 2) + Math.pow(dy2, 2));
 
-		let mvmtAway2 = (vx2 * dux) + (vy2 * duy);
-		let dscale2 = (mvmtAway2 / distance2) + 1;
+		// let mvmtAway2 = (vx2 * dux) + (vy2 * duy);
+		// let dscale2 = (mvmtAway2 / distance2) + 1;
 
-		// Position of slightly moved touch 1 in grid coords
-		let pos1 = toGridCoords(touch1.clientX + vx1, touch1.clientY + vy1);
-		zoomIntoPoint(Math.log2(dscale2), pos1.x, pos1.y);
+		// // Position of slightly moved touch 1 in grid coords
+		// let pos1 = toGridCoords(touch1.clientX + vx1, touch1.clientY + vy1);
+		// zoomIntoPoint(Math.log2(dscale2), pos1.x, pos1.y);
 
 		// Sure hope this works.
 		drawGrid();
