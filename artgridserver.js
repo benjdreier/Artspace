@@ -204,7 +204,7 @@ wsServer.on('request', function(request) {
 			grid_data[json.y][json.x] = json.value;
 			//broadcast the same message to all clients
 			for (var i=0; i<clients.length; i++) {
-				clients[i].sendUTF(json);
+				clients[i].sendUTF(message);
 			}
 		}
 		else if(json.type == "message"){
