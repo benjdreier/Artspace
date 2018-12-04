@@ -120,40 +120,54 @@ connection.onmessage = function(message){
     }
 }
 
+function drawPoint(x, y){
+	gridCoords = toGridCoords(x, y);
+	iX = Math.floor(gridCoords.x / DEFAULT_SIZE);
+	iY = Math.floor(gridCoords.y / DEFAULT_SIZE);
+	console.log(iX, iY);
+	if(iY>=0 && iY<grid.length){
+		console.log("Brush: "+brushColor);
+		console.log("Point: "+grid[iY][iX]);
+		// If trying to apply the same color, clear it.
+		var newValue;
+		if(grid[iY][iX] == brushColor){
+			console.log("same!");
+			newValue = DEFAULT_COLOR;
+		} 
+		else{
+			console.log("different!");
+			newValue = brushColor;
+		}
+		console.log("New: "+newValue);
+		updateGrid(grid, iX, iY, newValue);
+	}
+	drawGrid();
+}
 
 
+var targetX, targetY;
+function approxEquals(a, b){
+	console.log(a, b);
+	return Math.abs(a - b) <= 3;
+}
 
 canvas.addEventListener('mousedown', function(e){
 	mouseDown = true;
 	if(MODES[mode] == "Draw"){
-		gridCoords = toGridCoords(e.clientX, e.clientY);
-		iX = Math.floor(gridCoords.x / DEFAULT_SIZE);
-		iY = Math.floor(gridCoords.y / DEFAULT_SIZE);
-		console.log(iX, iY);
-		if(iY>=0 && iY<grid.length){
-			console.log("Brush: "+brushColor);
-			console.log("Point: "+grid[iY][iX]);
-			// If trying to apply the same color, clear it.
-			var newValue;
-			if(grid[iY][iX] == brushColor){
-				console.log("same!");
-				newValue = DEFAULT_COLOR;
-			} 
-			else{
-				console.log("different!");
-				newValue = brushColor;
-			}
-			console.log("New: "+newValue);
-			updateGrid(grid, iX, iY, newValue);
-		}
-		drawGrid();
+		drawPoint(e.clientX, e.clientY);
+	}
+	else{
+		targetX = e.clientX;
+		targetY = e.clientY;
 	}
 });
 canvas.addEventListener('mouseup', function(e){
 	mouseDown = false;
+	if(approxEquals(e.clientX, targetX) && approxEquals(e.clientY, targetY)){
+		drawPoint(e.clientX, e.clientY);
+	}
 });
 canvas.addEventListener('mousemove', function(e){
-	console.log(mouseDown);
 	if(MODES[mode] == "Move" && mouseDown){
 		console.log(e.movementX);
 		//drag the canvas center
