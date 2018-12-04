@@ -227,8 +227,6 @@ canvas.addEventListener("touchmove", function(e){
 		let id1 = touch1.identifier;
 		let id2 = touch2.identifier;
 
-		serverLog()
-
 		// Respective movements of touches in screen coords
 		let vx1 = touch1.clientX - touchPosits[id1].x;
 		let vy1 = touch1.clientY - touchPosits[id1].y;
