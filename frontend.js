@@ -232,6 +232,8 @@ canvas.addEventListener("touchmove", function(e){
 		let vy1 = touch1.clientY - touchPosits[id1].y;
 		let vx2 = touch2.clientX - touchPosits[id2].x;
 		let vy2 = touch2.clientY - touchPosits[id2].y;
+		console.log("Touch 1 moved ", vx1, vy1);
+		console.log("Touch 2 moved ", vx2, vy2);
 		// Update last position
 		touchPosits[id1].x = touch1.clientX;
 		touchPosits[id1].y = touch1.clientY;
@@ -241,6 +243,7 @@ canvas.addEventListener("touchmove", function(e){
 		// Displacement between touches in screen coords
 		let dx1 = touch2.clientX - touch1.clientX;
 		let dy1 = touch2.clientY - touch1.clientY;
+		console.log("Displacement:" dx1, dy1);
 		
 		// Apply the effect from movement 1 and movement 2 in succession
 		// Start with the first movement
@@ -275,6 +278,7 @@ canvas.addEventListener("touchmove", function(e){
 		zoomIntoPoint(Math.log2(dscale2), pos1.x, pos1.y);
 
 		// Sure hope this works.
+		drawGrid();
 
 	}
 	
