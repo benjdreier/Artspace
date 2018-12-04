@@ -178,16 +178,16 @@ window.addEventListener("keydown", function(e){
 // Handle mobile touch events
 // http://bencentra.com/code/2014/12/05/html5-canvas-touch-events.html
 
-var touchPosits = [];
+var touchPosits = {};
 
 canvas.addEventListener("touchstart", function(e){
 	e.preventDefault();
 	// The latest touch
 	var touch = e.touches[e.touches.length-1];
-	touch.lastX = touch.clientX;
-	touch.lastY = touch.clientY;
-	// Add this touch to the list of all touches
-	touches.push(touch);
+
+	// Add this touch to the list of all touch positions
+	touchPosits[touch.identifier] = {x: touch.clientX, y: touch.clientY};
+	
 	var mouseEvent = new MouseEvent("mousedown", {
 		clientX: touch.clientX,
 		clientY: touch.clientY
@@ -197,90 +197,99 @@ canvas.addEventListener("touchstart", function(e){
 
 canvas.addEventListener("touchmove", function(e){
 	e.preventDefault();
-	// if(e.touches.length == 1){
-	// 	console.log("One touch moved");
-	// 	// Move the canvas
-	// 	var touch = e.touches[0];
-	// 	console.log("x: " + touch.clientX);
-	// 	console.log("l: " + touch.lastX);
+	if(e.touches.length == 1){
+		console.log("One touch down");
+		// Move the canvas
+		var touch = e.touches[0];
+		console.log("x: " + touch.clientX);
+		let id = touch.identifier;
 
-	// 	var dX = touch.clientX - touch.lastX;
-	// 	var dY = touch.clientY - touch.lastY;
-	// 	touch.lastX = touch.clientX;
-	// 	touch.lastY = touch.clientY;
-	// 	var moveEvent = new MouseEvent("mousemove", {
-	// 		movementX: dX,
-	// 		movementY: dY,
-	// 		clientX: touch.clientX,
-	// 		clientY: touch.clientY
-	// 	});
-	// 	canvas.dispatchEvent(moveEvent);
-	// }
-	// else if(e.touches.length > 1){
-	// 	console.log("Multiple moved");
-	// 	// Ok now let's attempt to Zoom. Let's do some math.
-	// 	var touch1 = e.touches[0];
-	// 	var touch2 = e.touches[1];
+		var dX = touch.clientX - touchPosits[id].x;
+		var dY = touch.clientY - touchPosits[id].y;
+		touchPosits[id].x = touch.clientX;
+		touchPosits[id].y = touch.clientY;
 
-	// 	// Respective movements of touches in screen coords
-	// 	let vx1 = touch1.clientX - touch1.lastX;
-	// 	let vy1 = touch1.clientY - touch1.lastY;
-	// 	let vx2 = touch2.clientX - touch2.lastX;
-	// 	let vy2 = touch2.clientY - touch2.lastY;
-	// 	// Update last position
-	// 	touch1.lastX = touch1.clientX;
-	// 	touch1.lastY = touch1.clientY;
-	// 	touch2.lastX = touch2.clientX;
-	// 	touch2.lastY = touch2.clientY;
+		var moveEvent = new MouseEvent("mousemove", {
+			movementX: dX,
+			movementY: dY,
+			clientX: touch.clientX,
+			clientY: touch.clientY
+		});
+		canvas.dispatchEvent(moveEvent);
+	}
+	else if(e.touches.length > 1){
+		console.log("Multiple touches");
+		// Ok now let's attempt to Zoom. Let's do some math.
+		// Just like... idk don't touch w/ 3 fingers please. 
+		var touch1 = e.touches[0];
+		var touch2 = e.touches[1];
 
-	// 	// Displacement between touches in screen coords
-	// 	let dx1 = touch2.clientX - touch1.clientX
-	// 	let dy1 = touch2.clientY - touch1.clientY;
+		let id1 = touch1.identifier;
+		let id2 = touch2.identifier;
+
+		// Respective movements of touches in screen coords
+		let vx1 = touch1.clientX - touchPosits[id1].x;
+		let vy1 = touch1.clientY - touchPosits[id1].y;
+		let vx2 = touch2.clientX - touchPosits[id2].x;
+		let vy2 = touch2.clientY - touchPosits[id2].y;
+		// Update last position
+		touchPosits[id1].x = touch1.clientX;
+		touchPosits[id1].y = touch1.clientY;
+		touchPosits[id2].x = touch2.clientX;
+		touchPosits[id2].y = touch2.clientY;
+
+		// Displacement between touches in screen coords
+		let dx1 = touch2.clientX - touch1.clientX;
+		let dy1 = touch2.clientY - touch1.clientY;
 		
-	// 	// Apply the effect from movement 1 and movement 2 in succession
-	// 	// Start with the first movement
+		// Apply the effect from movement 1 and movement 2 in succession
+		// Start with the first movement
 
-	// 	let distance1 = Math.sqrt(Math.pow(dx1, 2) + Math.pow(dy1, 2));
-	// 	// Unit vector at touch1 poiting to touch2
-	// 	let dux = dx1 / distance1;
-	// 	let duy = dy1 / distance1;
+		let distance1 = Math.sqrt(Math.pow(dx1, 2) + Math.pow(dy1, 2));
+		// Unit vector at touch1 poiting to touch2
+		let dux = dx1 / distance1;
+		let duy = dy1 / distance1;
 
-	// 	// v1 dotted with -du to get the magnitude of the component of p1's movement in the direction away from p2
-	// 	let mvmtAway1 = (vx1 * (-1*dux)) + (vy1 * (-1*duy));
-	// 	let dscale1 = (mvmtAway1 / distance) + 1;
+		// v1 dotted with -du to get the magnitude of the component of p1's movement in the direction away from p2
+		let mvmtAway1 = (vx1 * (-1*dux)) + (vy1 * (-1*duy));
+		let dscale1 = (mvmtAway1 / distance) + 1;
 
-	// 	// Position of touch 2 in grid coords
-	// 	let pos2 = toGridCoords(touch2.clientX, touch2.clientY);
+		// Position of touch 2 in grid coords
+		let pos2 = toGridCoords(touch2.clientX, touch2.clientY);
 
-	// 	// Zeeping point 2 fixed, zoom in.
-	// 	zoomIntoPoint(Math.log2(dscale1), pos2.x, pos2.y);
+		// Zeeping point 2 fixed, zoom in.
+		zoomIntoPoint(Math.log2(dscale1), pos2.x, pos2.y);
 
-	// 	// Now for the second one, we need the updated distance and position
-	// 	// du stays the same (I think)
-	// 	// Calulate new displacement
-	// 	let dx2 = dx1 + vx1;
-	// 	let dy2 = dy1 + vy1;
-	// 	let distance2 = Math.sqrt(Math.pow(dx2, 2) + Math.pow(dy2, 2));
+		// Now for the second one, we need the updated distance and position
+		// du stays the same (I think)
+		// Calulate new displacement
+		let dx2 = dx1 + vx1;
+		let dy2 = dy1 + vy1;
+		let distance2 = Math.sqrt(Math.pow(dx2, 2) + Math.pow(dy2, 2));
 
-	// 	let mvmtAway2 = (vx2 * dux) + (vy2 * duy);
-	// 	let dscale2 = (mvmtAway2 / distance) + 1;
+		let mvmtAway2 = (vx2 * dux) + (vy2 * duy);
+		let dscale2 = (mvmtAway2 / distance) + 1;
 
-	// 	// Position of slightly moved touch 1 in grid coords
-	// 	let pos1 = toGridCoords(touch1.clientX + vx1, touch1.clientY + vy1);
-	// 	zoomIntoPoint(Math.log2(dscale2), pos1.x, pos1.y);
+		// Position of slightly moved touch 1 in grid coords
+		let pos1 = toGridCoords(touch1.clientX + vx1, touch1.clientY + vy1);
+		zoomIntoPoint(Math.log2(dscale2), pos1.x, pos1.y);
 
-	// 	// Sure hope this works.
+		// Sure hope this works.
 
-	// }
+	}
 	
-	var json = JSON.stringify({type:"debug", message: e.touches});
-	console.log(json);
+	// var json = JSON.stringify({type:"debug", message: e.touches});
+	// console.log(json);
 
-	connection.send(json);
+	// connection.send(json);
 });
 
-canvas.addEventListener("touchup", function(e){
+canvas.addEventListener("touchend", function(e){
 	e.preventDefault();
+	let touches = e.changedTouches;
+	for(let i=0; i<touches.length; i++){
+		delete touchPosits[touches[i].identifier];
+	}
 	var mouseEvent = new MouseEvent("mouseup", {});
   	canvas.dispatchEvent(mouseEvent);
 })
