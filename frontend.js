@@ -227,6 +227,8 @@ canvas.addEventListener("touchmove", function(e){
 		let id1 = touch1.identifier;
 		let id2 = touch2.identifier;
 
+		serverLog()
+
 		// Respective movements of touches in screen coords
 		let vx1 = touch1.clientX - touchPosits[id1].x;
 		let vy1 = touch1.clientY - touchPosits[id1].y;
@@ -252,7 +254,7 @@ canvas.addEventListener("touchmove", function(e){
 
 		// v1 dotted with -du to get the magnitude of the component of p1's movement in the direction away from p2
 		let mvmtAway1 = (vx1 * (-1*dux)) + (vy1 * (-1*duy));
-		let dscale1 = (mvmtAway1 / distance) + 1;
+		let dscale1 = (mvmtAway1 / distance1) + 1;
 
 		// Position of touch 2 in grid coords
 		let pos2 = toGridCoords(touch2.clientX, touch2.clientY);
@@ -268,7 +270,7 @@ canvas.addEventListener("touchmove", function(e){
 		let distance2 = Math.sqrt(Math.pow(dx2, 2) + Math.pow(dy2, 2));
 
 		let mvmtAway2 = (vx2 * dux) + (vy2 * duy);
-		let dscale2 = (mvmtAway2 / distance) + 1;
+		let dscale2 = (mvmtAway2 / distance2) + 1;
 
 		// Position of slightly moved touch 1 in grid coords
 		let pos1 = toGridCoords(touch1.clientX + vx1, touch1.clientY + vy1);
