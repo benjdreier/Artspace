@@ -12,78 +12,30 @@
 	<div id="container">
 		<div id="toolbox">
 			<div id="toolbox-header">
-				Toolbox
+				Toolbox (+)
 			</div>
-			<p><a href="#" ></a></p>
-			<p><button class="button-color" id="button-black"></button></p>
-			<p><button class="button-color" id="button-red"></button></p>
-			<p><button class="button-color" id="button-orange"></button></p>
-			<p><button class="button-color" id="button-yellow"></button></p>
-			<p><button class="button-color" id="button-green"></button></p>
-			<p><button class="button-color" id="button-blue"></button></p>
-			<p><button class="button-color" id="button-purple"></button></p>
+			<div id="toolbox-content" style="display: inline">
+				<p><a href="#" ></a></p>
+				<p><button class="button-color" id="button-black"></button></p>
+				<p><button class="button-color" id="button-red"></button></p>
+				<p><button class="button-color" id="button-orange"></button></p>
+				<p><button class="button-color" id="button-yellow"></button></p>
+				<p><button class="button-color" id="button-green"></button></p>
+				<p><button class="button-color" id="button-blue"></button></p>
+				<p><button class="button-color" id="button-purple"></button></p>
 
-			<p><button id="button-class">Help</button></p>
-			<p>
-			<form action="/export">
-				<input type="submit" id="button-export"value="Export"></button>
-			</form>
-			</p>
+				<p><button id="button-class">Help</button></p>
+				<p>
+				<form action="/export">
+					<input type="submit" id="button-export"value="Export"></button>
+				</form>
+				</p>
+			</div>
 		</div>
 		<canvas id="canvas"></canvas>
 	</div>
-
-	<script>
-		// https://www.w3schools.com/howto/howto_js_draggable.asp
-		// Make the toolbox DIV element draggable:
-		dragElement(document.getElementById("toolbox"));
-
-		function dragElement(elmnt) {
-		  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-		  if (document.getElementById(elmnt.id + "-header")) {
-		    // if present, the header is where you move the DIV from:
-		    document.getElementById(elmnt.id + "-header").onmousedown = dragMouseDown;
-		  } else {
-		    // otherwise, move the DIV from anywhere inside the DIV: 
-		    elmnt.onmousedown = dragMouseDown;
-		  }
-
-		  function dragMouseDown(e) {
-		    e = e || window.event;
-		    e.preventDefault();
-		    // get the mouse cursor position at startup:
-		    pos3 = e.clientX;
-		    pos4 = e.clientY;
-		    document.onmouseup = closeDragElement;
-		    // call a function whenever the cursor moves:
-		    document.onmousemove = elementDrag;
-		  }
-
-		  function elementDrag(e) {
-		    e = e || window.event;
-		    e.preventDefault();
-		    // calculate the new cursor position:
-		    pos1 = pos3 - e.clientX;
-		    pos2 = pos4 - e.clientY;
-		    pos3 = e.clientX;
-		    pos4 = e.clientY;
-		    // set the element's new position:
-		    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-		    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-		  }
-
-		  function closeDragElement() {
-		    // stop moving when mouse button is released:
-		    document.onmouseup = null;
-		    document.onmousemove = null;
-		  }
-		}
-	</script>
 </body>
 <br>
-
-
-
 
 <div id="help" hidden>
 <h2 ">Basic instructions:</h2>
@@ -97,3 +49,22 @@ Draw something nice!
 
 
 </html>
+
+<script type="text/javascript">
+// Make the toolbox minimizable on click
+
+let toolboxHeader = document.getElementById("toolbox-header");
+let toolboxContent = document.getElementById("toolbox-content");
+
+toolboxHeader.addEventListener("click", function(e){
+	// Toggle between visible and hidden
+	if(toolboxContent.style.display == "none"){
+		toolboxContent.style.display = "inline";
+		toolboxHeader.innerText = "Toolbox (+)";
+	}
+	else{
+		toolboxContent.style.display = "none";
+		toolboxHeader.innerText = "Toolbox (-)";
+	}
+});
+</script>
