@@ -100,7 +100,7 @@ connection.onmessage = function(message){
     	var json = JSON.parse(message.data);
     } 
     catch (e) {
-    	console.log('Invalid JSON: ', message.data);
+    	console.log('Invalid JSON: ', message);
     	return;
     }
     if(json.type == "cellUpdate"){
@@ -415,15 +415,6 @@ function drawGrid(){
 	ctx.fillText("Users: " + currentUsers, 5, 15);
 	ctx.fillText("Mode: " + MODES[mode], 5, 25);
 }
-
-// let exportButton = document.getElementById("button-export");
-// exportButton.addEventListener("click", exportGrid);
-
-// function exportGrid(){
-// 	console.log("Requesting export....");
-// 	var json = JSON.stringify({type:"export"});
-// 	connection.send(json);
-// }
 
 function clear(){
 	oldStyle = ctx.fillStyle;
