@@ -243,7 +243,7 @@ canvas.addEventListener("touchmove", function(e){
 		// Displacement between touches in screen coords
 		let dx1 = touch2.clientX - touch1.clientX;
 		let dy1 = touch2.clientY - touch1.clientY;
-		console.log("Displacement:" dx1, dy1);
+		console.log("Displacement:", dx1, dy1);
 		
 		// Apply the effect from movement 1 and movement 2 in succession
 		// Start with the first movement
