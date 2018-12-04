@@ -277,17 +277,11 @@ canvas.addEventListener("touchmove", function(e){
 
 		// Position of slightly moved touch 1 in grid coords
 		//let pos1 = toGridCoords(touch1.clientX + vx1, touch1.clientY + vy1);
-		zoomIntoPoint(Math.log2(dscale2), touch2.clientX, touch2.clientY);
+		zoomIntoPoint(Math.log2(dscale1), touch1.clientX, touch1.clientY);
 
 		// Sure hope this works.
 		drawGrid();
-
 	}
-	
-	// var json = JSON.stringify({type:"debug", message: e.touches});
-	// console.log(json);
-
-	// connection.send(json);
 });
 
 canvas.addEventListener("touchend", function(e){
