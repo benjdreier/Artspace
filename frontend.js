@@ -202,6 +202,7 @@ canvas.addEventListener("touchmove", function(e){
 		// Move the canvas
 		var touch = e.touches[0];
 		console.log("x: " + touch.clientX);
+		console.log("grid coords: ", toGridCoords(touch.clientX, touch.clientY));
 		let id = touch.identifier;
 
 		var dX = touch.clientX - touchPosits[id].x;
@@ -259,6 +260,7 @@ canvas.addEventListener("touchmove", function(e){
 
 		// Position of touch 2 in grid coords
 		let pos2 = toGridCoords(touch2.clientX, touch2.clientY);
+		console.log("Grid coords of touch 2: ", pos);
 
 		// Zeeping point 2 fixed, zoom in.
 		zoomIntoPoint(Math.log2(dscale1), pos2.x, pos2.y);
