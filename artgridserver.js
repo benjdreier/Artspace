@@ -204,7 +204,7 @@ wsServer.on('request', function(request) {
 		var json = JSON.parse(message.utf8Data);
 		console.log(json);
 
-		if(json.type == "gridUpdate"){
+		if(json.type == "cellUpdate"){
 			// Update the grid in server memory
 			// TODO: validate
 			
