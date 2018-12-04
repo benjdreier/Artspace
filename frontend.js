@@ -36,7 +36,7 @@ let MODES = ["Move", "Draw"];
 var mode = 0;
 
 var brushColor = "#000000";
-let COLORS = ["#000000", "#0000FF", "#FF0000", "#00FF00"];
+let COLORS = ["#000000","#FF0000", "#FF8000", "#FFFF00", "#00FF00", "#0000FF", "#FF00FF"];
 let DEFAULT_COLOR = "#FFFFFF";
 
 var colorButtons = document.getElementsByClassName("button-color");

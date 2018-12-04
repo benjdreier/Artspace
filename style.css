@@ -5,7 +5,6 @@
 	position: absolute;
 }
 #toolbox {
-	top: 10px;
 	background-color: #ffffff;
 	text-align: center;
 	z-index: 9999;
@@ -27,15 +26,26 @@
     display: inline-block;
     font-size: 16px;
 }
+/*Todo: generate, don't hardcode*/
 #button-black {
 	background-color: #000000;
-}
-#button-blue {
-	background-color: #0000FF;
 }
 #button-red {
 	background-color: #FF0000;
 }
+#button-orange {
+	background-color: #FF8000;
+}
+#button-yellow {
+	background-color: #FFFF00;
+}
 #button-green {
 	background-color: #00FF00;
 }
+#button-blue {
+	background-color: #0000FF;
+}
+#button-purple {
+	background-color: #FF00FF;
+}
+
