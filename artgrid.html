@@ -12,7 +12,7 @@
 	<div id="container">
 		<div id="toolbox">
 			<div id="toolbox-header">
-				Toolbox (+)
+				Toolbox (-)
 			</div>
 			<div id="toolbox-content" style="display: inline">
 				<p><a href="#" ></a></p>
@@ -38,13 +38,7 @@
 <br>
 
 <div id="help" hidden>
-<h2 ">Basic instructions:</h2>
-There are two modes, Move and Draw<br>
-You can see which one in the top left corner<br>
-Switch between them by pressing Space<br>
-In Move, click and drag to pan around and scroll up/down to zoom<br>
-In Draw, click a pixel to invert it.<br>
-Draw something nice!
+
 </div>
 
 
@@ -60,11 +54,11 @@ toolboxHeader.addEventListener("click", function(e){
 	// Toggle between visible and hidden
 	if(toolboxContent.style.display == "none"){
 		toolboxContent.style.display = "inline";
-		toolboxHeader.innerText = "Toolbox (+)";
+		toolboxHeader.innerText = "Toolbox (-)";
 	}
 	else{
 		toolboxContent.style.display = "none";
-		toolboxHeader.innerText = "Toolbox (-)";
+		toolboxHeader.innerText = "Toolbox (+)";
 	}
 });
 </script>
