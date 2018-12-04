@@ -59,13 +59,6 @@ const UPDATE_INTERVAL = 600000;
 
 setInterval(updateDB, UPDATE_INTERVAL);
 
-// var grid_data = [[0,0,0,0,0,0],
-// 				 [0,1,0,0,1,0],
-// 				 [0,0,0,0,0,0],
-// 				 [0,1,0,0,1,0],
-// 				 [0,0,1,1,0,0],
-// 				 [0,0,0,0,0,0],]
-
 let port = process.env.PORT || 8000;
 var file = new static.Server();
 

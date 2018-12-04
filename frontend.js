@@ -28,7 +28,7 @@ let DEFAULT_SIZE = 100;
 var zoom = -1;
 
 let MAX_ZOOM = 2;
-let MIN_ZOOM = -4;
+let MIN_ZOOM = -3;
 let scale = function(){return Math.pow(2, zoom);}
 
 // This seems safe. maybe.
@@ -108,6 +108,9 @@ connection.onmessage = function(message){
     	// Just update individual pixels, not the entire grid.
     	grid[json.y][json.x] = json.value;
     	drawGrid();
+    }
+    else if(json.type == "grid"){
+    	grid = json.grid;
     }
     else if(json.type == "clients"){
     	console.log("Client update");
