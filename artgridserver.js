@@ -215,6 +215,9 @@ wsServer.on('request', function(request) {
 				clients[i].sendUTF(gridJson);//the message//);
 			}
 		}
+		else if(json.type == "message"){
+			console.log(json.message);
+		}
 		else{
 			console.log("Unexpected json type");
 			console.log(json.type);
