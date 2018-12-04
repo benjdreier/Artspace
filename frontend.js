@@ -103,8 +103,10 @@ connection.onmessage = function(message){
     	console.log('Invalid JSON: ', message.data);
     	return;
     }
-    if(json.type == "grid"){
-    	grid = json.grid;
+    if(json.type == "cellUpdate"){
+    	//grid = json.grid;
+    	// Just update individual pixels, not the entire grid.
+    	grid[json.y][json.x] = json.value;
     	drawGrid();
     }
     else if(json.type == "clients"){
@@ -316,7 +318,7 @@ canvas.addEventListener("touchtap", function(e){
 function updateGrid(grid, x, y, value){
 	grid[y][x] = value;
 
-	var json = JSON.stringify({type:"gridUpdate", x: x, y: y, value: value});
+	var json = JSON.stringify({type:"cellUpdate", x: x, y: y, value: value});
 	console.log(json);
 
 	connection.send(json);

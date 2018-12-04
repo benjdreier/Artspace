@@ -209,10 +209,9 @@ wsServer.on('request', function(request) {
 			// TODO: validate
 			
 			grid_data[json.y][json.x] = json.value;
-			let gridJson = JSON.stringify({type: "grid", grid: grid_data});
-			//broadcast the message
+			//broadcast the same message to all clients
 			for (var i=0; i<clients.length; i++) {
-				clients[i].sendUTF(gridJson);//the message//);
+				clients[i].sendUTF(json);
 			}
 		}
 		else if(json.type == "message"){
