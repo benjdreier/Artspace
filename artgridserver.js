@@ -55,8 +55,8 @@ const DB_UPDATE_INTERVAL = 600000;
 setInterval(updateDB, DB_UPDATE_INTERVAL);
 
 // Every 10 seconds, update all users with grid information
-const GRID_UPDATE_INTERVAL = 10000;
-setInterval(sendGrid, GRID_UPDATE_INTERVAL);
+// const GRID_UPDATE_INTERVAL = 10000;
+// setInterval(sendGrid, GRID_UPDATE_INTERVAL);
 
 
 let port = process.env.PORT || 8000;
@@ -184,13 +184,13 @@ wsServer.on('request', function(request) {
 			// TODO: validate
 			
 			grid_data[json.y][json.x] = json.value;
-			//broadcast the same message to all clients
-			// for (var i=0; i<clients.length; i++) {
-			// 	clients[i].sendUTF(JSON.stringify(json));
-			// }
+			broadcast the same message to all clients
+			for (var i=0; i<clients.length; i++) {
+				clients[i].sendUTF(JSON.stringify(json));
+			}
 
 			// Or try just sending the whole grid back
-			sendGrid();
+			//sendGrid();
 		}
 		else if(json.type == "message"){
 			console.log(json.message);
