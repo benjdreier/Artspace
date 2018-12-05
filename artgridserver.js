@@ -30,10 +30,6 @@ client.connect();
 
 var clients = [];
 
-//This is where the grid will live. It should recall the configuration
-//from some database eventually, instead, of blanking it out with each
-//refresh.
-
 // var grid_data = new Array(300);
 // for (var i = 0; i < grid_data.length; i++) {
 // 	grid_data[i] = new Array(300);
@@ -47,7 +43,7 @@ var clients = [];
 var grid_data;
 
 client.query("SELECT grid_data FROM grids ORDER BY timestamp DESC", (err, res) => {
-	console.log("Here is that data u asked for!");
+	console.log("Grid data loaded from Postgres");
 	if (err) throw err;
 	if(res.rows[0]["grid_data"][0]){
 		grid_data = res.rows[0]["grid_data"];
@@ -55,16 +51,19 @@ client.query("SELECT grid_data FROM grids ORDER BY timestamp DESC", (err, res) =
 });
 
 // Every 10 minutes
-const UPDATE_INTERVAL = 600000;
+const DB_UPDATE_INTERVAL = 600000;
+setInterval(updateDB, DB_UPDATE_INTERVAL);
 
-setInterval(updateDB, UPDATE_INTERVAL);
+// Every 10 seconds
+const GRID_UPDATE_INTERVAL = 10000;
+
+
 
 let port = process.env.PORT || 8000;
 var file = new static.Server();
 
 var server = http.createServer(function(request, response) {
 	// Handle http requests
-	console.log("fucko");
 	console.log(request.url);
 
 	// Yikes ok this is awful. I would use express for routing but I have to handle http requests and websockets on the same port and I couldn't make websocket endpoints work with express. So I have to route with the stock http server, and I couldn't find a better way than this to make / route to my index file but have nothing else be affected. I tried many ways and this is the only way that worked. Next time maybe i'd start building the server with express, but at this point this is good enough. even though it kind of defeats the purpose of the router in the first place. It works.
@@ -99,8 +98,6 @@ var server = http.createServer(function(request, response) {
 			file.serve(request, response);
 		}).resume();
 	}
-
-	
 });
 
 dispatcher.onGet("/", function(req, res) {
@@ -121,21 +118,6 @@ server.listen(port, function() {
 wsServer = new WebSocketServer({
 	httpServer: server
 });
-
-// app.use(express.static("grids"));
-// app.use(express.static("public"));
-
-// app.get('/', (req, res) => {
-// 	res.sendfile(__dirname + '/artgrid.html');
-// });
-// app.get('/export', (req, res) => {
-// 	exportGrid(function(){
-// 		res.download("grids/test.png");
-// 	});
-// })
-// app.listen(3000, function () {
-// 	console.log("Express running on port 3000");
-// });
 
 function updateClients(){
 	for (var i=0; i<clients.length; i++) {

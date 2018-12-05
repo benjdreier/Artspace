@@ -8,11 +8,7 @@ ctx = c.getContext('2d');
 c.width = document.body.clientWidth;
 c.height = document.body.clientHeight;
 
-window.addEventListener('resize', function(e){
-	c.width = document.body.clientWidth;
-	c.height = document.body.clientHeight;
-	drawGrid();
-});
+
 
 var canvasRect = canvas.getBoundingClientRect();
 var mouseDown = false;
@@ -51,6 +47,7 @@ for(var i=0; i<colorButtons.length; i++){
 }
 
 var grid;
+drawGrid();
 
 // Number of active users
 var currentUsers = 0;
@@ -330,6 +327,12 @@ canvas.addEventListener("touchtap", function(e){
 	mode = oldMode;
 })
 
+window.addEventListener('resize', function(e){
+	c.width = document.body.clientWidth;
+	c.height = document.body.clientHeight;
+	drawGrid();
+});
+
 
 
 function updateGrid(grid, x, y, value){
@@ -368,66 +371,74 @@ function toGridCoords(domX, domY){
 function drawGrid(){
 	clear();
 
-	// Higher zoom levels will make the squares bigger
-	let squareSize = DEFAULT_SIZE * scale();
+	// Only draw if there is a grid to draw
+	if(grid){
+		// Higher zoom levels will make the squares bigger
+		let squareSize = DEFAULT_SIZE * scale();
 
-	// Calculate array bounds so it doesn't iterate over the whole
-	// grid needlessly
+		// Calculate array bounds so it doesn't iterate over the whole
+		// grid needlessly
 
-	// Bounding box of the screen
-	let leftBound = origin.x;
-	let rightBound = origin.x + canvas.width;
-	let topBound = origin.y;
-	let bottomBound = origin.y + canvas.height;
-	
-	// Assume grid starts in the top left, we can adjust
-	// the default center to make it appear centered
-	var leftIndex = Math.floor(leftBound / squareSize);
-	var rightIndex = Math.floor(rightBound / squareSize);
-	var topIndex = Math.floor(topBound / squareSize);
-	var bottomIndex = Math.floor(bottomBound / squareSize);
+		// Bounding box of the screen
+		let leftBound = origin.x;
+		let rightBound = origin.x + canvas.width;
+		let topBound = origin.y;
+		let bottomBound = origin.y + canvas.height;
+		
+		// Assume grid starts in the top left, we can adjust
+		// the default center to make it appear centered
+		var leftIndex = Math.floor(leftBound / squareSize);
+		var rightIndex = Math.floor(rightBound / squareSize);
+		var topIndex = Math.floor(topBound / squareSize);
+		var bottomIndex = Math.floor(bottomBound / squareSize);
 
-	//adjust so indices don't overflow
-	leftIndex = Math.max(leftIndex, 0);
-	topIndex = Math.max(topIndex, 0);
-	rightIndex = Math.min(rightIndex, grid[0].length-1);
-	bottomIndex = Math.min(bottomIndex, grid.length-1);
+		//adjust so indices don't overflow
+		leftIndex = Math.max(leftIndex, 0);
+		topIndex = Math.max(topIndex, 0);
+		rightIndex = Math.min(rightIndex, grid[0].length-1);
+		bottomIndex = Math.min(bottomIndex, grid.length-1);
 
-	// Now that those are calculated, iterate through the subset
-	// of grid and draw it. 
-	ctx.lineWidth = 0.5;
+		// Now that those are calculated, iterate through the subset
+		// of grid and draw it. 
+		ctx.lineWidth = 0.5;
 
-	for(let y=topIndex; y<=bottomIndex; y++){
-		for(let x=leftIndex; x<=rightIndex; x++){
-	//for(let y=0; y<grid.length; y++){
-		//for(let x=0; x<grid[0].length; x++){
-			//draw grid square
-			ctx.beginPath();
-			let cornerX = x*squareSize-origin.x;
-			let cornerY = y*squareSize-origin.y;
-			ctx.moveTo(cornerX, cornerY);
-			ctx.lineTo(cornerX+squareSize, cornerY);
-			ctx.lineTo(cornerX+squareSize, cornerY+squareSize);
-			ctx.lineTo(cornerX, cornerY+squareSize);
-			ctx.closePath();
-			// Draw gridline
-			ctx.stroke();
-			// Fill square
-			ctx.fillStyle = grid[y][x];
-			//legacy support
-			if(grid[y][x] == 1){
-				ctx.fillStyle = "#000000";
+		for(let y=topIndex; y<=bottomIndex; y++){
+			for(let x=leftIndex; x<=rightIndex; x++){
+		//for(let y=0; y<grid.length; y++){
+			//for(let x=0; x<grid[0].length; x++){
+				//draw grid square
+				ctx.beginPath();
+				let cornerX = x*squareSize-origin.x;
+				let cornerY = y*squareSize-origin.y;
+				ctx.moveTo(cornerX, cornerY);
+				ctx.lineTo(cornerX+squareSize, cornerY);
+				ctx.lineTo(cornerX+squareSize, cornerY+squareSize);
+				ctx.lineTo(cornerX, cornerY+squareSize);
+				ctx.closePath();
+				// Draw gridline
+				ctx.stroke();
+				// Fill square
+				ctx.fillStyle = grid[y][x];
+				//legacy support
+				if(grid[y][x] == 1){
+					ctx.fillStyle = "#000000";
+				}
+				if(grid[y][x] == 0 || !grid[y][x]){
+					ctx.fillStyle = "#FFFFFF";
+				}
+				ctx.fill();
 			}
-			if(grid[y][x] == 0 || !grid[y][x]){
-				ctx.fillStyle = "#FFFFFF";
-			}
-			ctx.fill();
 		}
+		// ctx.fillStyle="#000000";
+		// ctx.font="10px Verdana";
+		// // Draw some informational stuff
+		// ctx.fillText("Users: " + currentUsers, 5, 15);
+		// ctx.fillText("Mode: " + MODES[mode], 5, 25);
 	}
-	ctx.fillStyle="#000000";
-	// Draw some informational stuff
-	ctx.fillText("Users: " + currentUsers, 5, 15);
-	ctx.fillText("Mode: " + MODES[mode], 5, 25);
+	else{
+		ctx.font="30px Verdana";
+		ctx.fillText("Loading...", 10, 30);
+	}
 }
 
 function clear(){
