@@ -93,6 +93,7 @@ connection.onmessage = function(message){
 	// Handle incoming messages from the server
 	// For now, these will be JSON objects just 
 	// containing an updated grid
+
 	try {
     	var json = JSON.parse(message.data);
     } 
@@ -100,6 +101,7 @@ connection.onmessage = function(message){
     	console.log('Invalid JSON: ', message);
     	return;
     }
+    console.log("message recieived: ", json);
     if(json.type == "cellUpdate"){
     	//grid = json.grid;
     	// Just update individual pixels, not the entire grid.
