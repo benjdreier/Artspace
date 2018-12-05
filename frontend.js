@@ -342,13 +342,15 @@ function updateGrid(grid, x, y, value){
 	var json = JSON.stringify({type:"cellUpdate", x: x, y: y, value: value});
 	console.log(json);
 
-	try{
+	if(connection.readyState == 1){
 		console.log("state: ", connection.readyState);
 		connection.send(json);
 	}
-	catch (e){
+	else{
 		console.log("COULD NOT SEND");
-		console.log(connection);
+		console.log(connection.readyState);
+		alert("Your connection has closed, refreshing the page");
+		location.reload();
 	}
 }
 
