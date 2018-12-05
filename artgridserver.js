@@ -50,13 +50,13 @@ client.query("SELECT grid_data FROM grids ORDER BY timestamp DESC", (err, res) =
 	}
 });
 
-// Every 10 minutes
+// Every 10 minutes, update the database w/ grid information
 const DB_UPDATE_INTERVAL = 600000;
 setInterval(updateDB, DB_UPDATE_INTERVAL);
 
-// Every 10 seconds
+// Every 10 seconds, update all users with grid information
 const GRID_UPDATE_INTERVAL = 10000;
-
+setInterval(sendGrid, GRID_UPDATE_INTERVAL);
 
 
 let port = process.env.PORT || 8000;
@@ -212,6 +212,14 @@ wsServer.on("SIGTERM", function(){
 	console.log("We're exiting now!");
 	updateDB();
 });
+
+function sendGrid(){
+	let json = Json.stringify({type: "grid", grid: grid_data});
+	//broadcast the same message to all clients
+	for (var i=0; i<clients.length; i++) {
+		clients[i].sendUTF(json);
+	}
+}
 
 function updateDB(){
 	console.log("Updating database...");
