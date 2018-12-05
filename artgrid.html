@@ -24,7 +24,7 @@
 				<p><button class="button-color" id="button-blue"></button></p>
 				<p><button class="button-color" id="button-purple"></button></p>
 
-				<p><button id="button-class">Help</button></p>
+				<p><button id="button-help">Help</button></p>
 				<p>
 				<form action="/export">
 					<input type="submit" id="button-export"value="Export"></button>
@@ -32,16 +32,18 @@
 				</p>
 			</div>
 		</div>
+		<div id="help-box">
+			Click and Drag to move around the grid<br>
+			Zoom by scrolling up/down or pinching<br>
+			Choose your color from the toolbar, and click/tap to draw<br>
+			Minimize the toolbar by tapping its top<br>
+			Draw something nice!<br>
+			Click me to close.
+		</div>
 		<canvas id="canvas"></canvas>
 	</div>
 </body>
 <br>
-
-<div id="help" hidden>
-
-</div>
-
-
 </html>
 
 <script type="text/javascript">
@@ -61,4 +63,14 @@ toolboxHeader.addEventListener("click", function(e){
 		toolboxHeader.innerText = "Toolbox (+)";
 	}
 });
+
+// Let the Help button open the Information div
+let helpButton = document.getElementById("button-help");
+let helpBox = document.getElementById("help-box");
+helpButton.addEventListener("click", function(e){
+	helpBox.style.display = "block";
+})
+helpBox.addEventListener("click", function(e){
+	helpBox.style.display = "none";
+})
 </script>

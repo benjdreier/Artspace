@@ -1,8 +1,18 @@
 #container {
 	position: relative;
 }
-#container canvas, #toolbox {
+#container canvas, #toolbox, #help-box {
 	position: absolute;
+}
+#help-box {
+	margin: auto;
+	/*width: 50%;*/
+	text-align: center;
+	padding: 10px;
+	display: none;
+	z-index: 9998;
+	background-color: #f1f1f1;
+	cursor: pointer;
 }
 #toolbox {
 	right:0px;
@@ -26,6 +36,9 @@
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
+}
+.button-color {
+	cursor: pointer
 }
 /*Todo: generate, don't hardcode*/
 #button-black {
