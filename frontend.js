@@ -108,6 +108,7 @@ connection.onmessage = function(message){
     }
     else if(json.type == "grid"){
     	grid = json.grid;
+    	drawGrid();
     }
     else if(json.type == "clients"){
     	console.log("Client update");
