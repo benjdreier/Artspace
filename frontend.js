@@ -343,6 +343,7 @@ function updateGrid(grid, x, y, value){
 	console.log(json);
 
 	try{
+		console.log("state: ", connection.readyState);
 		connection.send(json);
 	}
 	catch (e){
