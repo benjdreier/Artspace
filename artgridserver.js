@@ -214,7 +214,7 @@ wsServer.on("SIGTERM", function(){
 });
 
 function sendGrid(){
-	let json = Json.stringify({type: "grid", grid: grid_data});
+	let json = JSON.stringify({type: "grid", grid: grid_data});
 	//broadcast the same message to all clients
 	for (var i=0; i<clients.length; i++) {
 		clients[i].sendUTF(json);
