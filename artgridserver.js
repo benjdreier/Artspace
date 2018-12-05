@@ -185,9 +185,12 @@ wsServer.on('request', function(request) {
 			
 			grid_data[json.y][json.x] = json.value;
 			//broadcast the same message to all clients
-			for (var i=0; i<clients.length; i++) {
-				clients[i].sendUTF(JSON.stringify(json));
-			}
+			// for (var i=0; i<clients.length; i++) {
+			// 	clients[i].sendUTF(JSON.stringify(json));
+			// }
+
+			// Or try just sending the whole grid back
+			sendGrid();
 		}
 		else if(json.type == "message"){
 			console.log(json.message);

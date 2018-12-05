@@ -341,7 +341,13 @@ function updateGrid(grid, x, y, value){
 	var json = JSON.stringify({type:"cellUpdate", x: x, y: y, value: value});
 	console.log(json);
 
-	connection.send(json);
+	try{
+		connection.send(json);
+	}
+	catch (e){
+		console.log("COULD NOT SEND");
+		console.log(connection);
+	}
 }
 
 function zoomIntoPoint(amount, pX, pY){
