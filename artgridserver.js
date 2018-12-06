@@ -138,7 +138,6 @@ wsServer.on('request', function(request) {
 	var connection = request.accept(null, request.origin);
 	var index = clients.push(connection) - 1;
 	console.log(clients.length + " users connected.");
-	console.log(clients);
 
 	//Send the grid automatically on connection
 	let gridJson = JSON.stringify({type: "grid", grid: grid_data});
