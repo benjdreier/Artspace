@@ -118,6 +118,10 @@ connection.onmessage = function(message){
     	console.log("Current users: ", currentUsers);
     	drawGrid();
     }
+    else if(json.type == "message"){
+    	console.log("Message received:");
+    	console.log(json.message);
+    }
 }
 
 function drawPoint(x, y){
