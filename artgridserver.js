@@ -179,8 +179,8 @@ wsServer.on('request', function(request) {
 
 	connection.on('close', function(connection) {
 		console.log("Disconnection from ", connection);
-		let json = JSON.stringify({"type": "message", "message": "YOU DISCONNECTED"});
-		connection.sendUTF(json);
+		// let json = JSON.stringify({"type": "message", "message": "YOU DISCONNECTED"});
+		// connection.sendUTF(json);
 		// get rid of client
 		clients.splice(clients.indexOf(connection), 1);
 		updateClients();
