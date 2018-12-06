@@ -72,19 +72,19 @@ if (!window.WebSocket) {
 // Connection via heroku
 var connection = new WebSocket('wss://damp-savannah-54651.herokuapp.com');
 
-// TEST CONNECTION
+// TEST CONNECTION via localhost
 if(!connection){
 	connection = new WebSocket('ws://localhost:8000');
 }
-console.log("connection: ", connection);
 
-connection.onopen = function(){
-	// Some stuff
-};
+console.log("Websocket connection: ", connection);
+
+// connection.onopen = function(){
+// 	// Some stuff
+// };
 
 connection.onerror = function(error){
 	// just in there were some problems with connection...
-	// TODO: Make this good
 	alert('Sorry, but there\'s some problem with your '
 		+ 'connection or the server is down.');
 };
@@ -103,7 +103,7 @@ connection.onmessage = function(message){
     }
     console.log("message recieived: ", json);
     if(json.type == "cellUpdate"){
-    	//grid = json.grid;
+    	// grid = json.grid;
     	// Just update individual pixels, not the entire grid.
     	grid[json.y][json.x] = json.value;
     	drawGrid();
@@ -113,9 +113,9 @@ connection.onmessage = function(message){
     	drawGrid();
     }
     else if(json.type == "clients"){
-    	console.log("Client update");
-    	console.log(json);
     	currentUsers = json.number;
+    	console.log("Client update:");
+    	console.log("Current users: ", currentUsers);
     	drawGrid();
     }
 }
@@ -124,32 +124,25 @@ function drawPoint(x, y){
 	gridCoords = toGridCoords(x, y);
 	iX = Math.floor(gridCoords.x / DEFAULT_SIZE);
 	iY = Math.floor(gridCoords.y / DEFAULT_SIZE);
-	console.log(iX, iY);
 	if(iY>=0 && iY<grid.length){
-		console.log("Brush: "+brushColor);
-		console.log("Point: "+grid[iY][iX]);
 		// If trying to apply the same color, clear it.
 		var newValue;
 		if(grid[iY][iX] == brushColor){
-			console.log("same!");
 			newValue = DEFAULT_COLOR;
 		} 
 		else{
-			console.log("different!");
 			newValue = brushColor;
 		}
-		console.log("New: "+newValue);
 		updateGrid(grid, iX, iY, newValue);
 	}
 	drawGrid();
 }
 
-
-var targetX, targetY;
 function approxEquals(a, b){
-	console.log(a, b);
 	return Math.abs(a - b) <= 3;
 }
+
+var targetX, targetY;
 
 canvas.addEventListener('mousedown', function(e){
 	mouseDown = true;
@@ -169,7 +162,6 @@ canvas.addEventListener('mouseup', function(e){
 });
 canvas.addEventListener('mousemove', function(e){
 	if(MODES[mode] == "Move" && mouseDown){
-		console.log(e.movementX);
 		//drag the canvas center
 		dx = e.movementX;
 		dy = e.movementY;
@@ -217,11 +209,8 @@ canvas.addEventListener("touchstart", function(e){
 canvas.addEventListener("touchmove", function(e){
 	e.preventDefault();
 	if(e.touches.length == 1){
-		console.log("One touch down");
 		// Move the canvas
 		var touch = e.touches[0];
-		console.log("x: " + touch.clientX);
-		console.log("grid coords: ", toGridCoords(touch.clientX, touch.clientY));
 		let id = touch.identifier;
 
 		var dX = touch.clientX - touchPosits[id].x;
@@ -238,7 +227,6 @@ canvas.addEventListener("touchmove", function(e){
 		canvas.dispatchEvent(moveEvent);
 	}
 	else if(e.touches.length > 1){
-		console.log("Multiple touches");
 		// Ok now let's attempt to Zoom. Let's do some math.
 		// Just like... idk don't touch w/ 3 fingers please. 
 		var touch1 = e.touches[0];
@@ -252,8 +240,6 @@ canvas.addEventListener("touchmove", function(e){
 		let vy1 = touch1.clientY - touchPosits[id1].y;
 		let vx2 = touch2.clientX - touchPosits[id2].x;
 		let vy2 = touch2.clientY - touchPosits[id2].y;
-		console.log("Touch 1 moved ", vx1, vy1);
-		console.log("Touch 2 moved ", vx2, vy2);
 		// Update last position
 		touchPosits[id1].x = touch1.clientX;
 		touchPosits[id1].y = touch1.clientY;
@@ -263,7 +249,6 @@ canvas.addEventListener("touchmove", function(e){
 		// Displacement between touches in screen coords
 		let dx1 = touch2.clientX - touch1.clientX;
 		let dy1 = touch2.clientY - touch1.clientY;
-		console.log("Displacement:", dx1, dy1);
 		
 		// Apply the effect from movement 1 and movement 2 in succession
 		// Start with the first movement
@@ -279,7 +264,6 @@ canvas.addEventListener("touchmove", function(e){
 
 		// Position of touch 2 in grid coords
 		let pos2 = toGridCoords(touch2.clientX, touch2.clientY);
-		console.log("Grid coords of touch 2: ", pos2);
 
 		// Zeeping point 2 fixed, zoom in.
 		zoomIntoPoint(Math.log2(dscale1), touch2.clientX, touch2.clientY);
@@ -315,7 +299,6 @@ canvas.addEventListener("touchend", function(e){
 
 canvas.addEventListener("touchtap", function(e){
 	e.preventDefault();
-	console.log(e);
 	var touch = e.customData;
 	let oldMode = mode;
 	// Switch to drawing mode
@@ -342,15 +325,13 @@ function updateGrid(grid, x, y, value){
 	grid[y][x] = value;
 
 	var json = JSON.stringify({type:"cellUpdate", x: x, y: y, value: value});
-	console.log(json);
 
 	if(connection.readyState == 1){
-		console.log("state: ", connection.readyState);
 		connection.send(json);
 	}
 	else{
 		console.log("COULD NOT SEND");
-		console.log(connection.readyState);
+		console.log("Ready state: ", connection.readyState);
 		alert("Your connection has closed, refreshing the page");
 		location.reload();
 	}
@@ -364,7 +345,6 @@ function zoomIntoPoint(amount, pX, pY){
 	preGridCoords = toGridCoords(pX, pY);
 	zoom += amount;
 	dScale = Math.pow(2, amount);
-	console.log("zoom: ", zoom);
 	postGridCoords = toGridCoords(pX, pY);
 
 	// adjust origin to preserve fixed point

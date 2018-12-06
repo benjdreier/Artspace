@@ -3,8 +3,7 @@ var http = require('http');
 var static = require('node-static');
 const { Client } = require('pg');
 var Jimp = require('jimp');
-const express = require('express');
-//const app = express();
+//const express = require('express');
 var HttpDispatcher = require('httpdispatcher');
 var dispatcher = new HttpDispatcher();
 var fs = require('fs');
@@ -18,27 +17,7 @@ console.log(process.env.DATABASE_URL);
 
 client.connect();
 
-// client.query('SELECT grid_data FROM grids WHERE id=0;', (err, res) => {
-// 	if (err) throw err;
-// 	console.log("Selected ")
-// 	for (let row of res.rows) {
-// 		console.log(JSON.stringify(row));
-// 	}
-// 	client.end();
-// });
-
-
 var clients = [];
-
-// var grid_data = new Array(300);
-// for (var i = 0; i < grid_data.length; i++) {
-// 	grid_data[i] = new Array(300);
-// 	for (var j = 0; j < grid_data[0].length; j++) {
-// 		grid_data[i][j] = "#FFFFFF";
-// 	}
-// }
-// updateDB();
-// return;
 
 var grid_data;
 
@@ -66,9 +45,8 @@ var server = http.createServer(function(request, response) {
 	// Handle http requests
 	console.log(request.url);
 
-	// Yikes ok this is awful. I would use express for routing but I have to handle http requests and websockets on the same port and I couldn't make websocket endpoints work with express. So I have to route with the stock http server, and I couldn't find a better way than this to make / route to my index file but have nothing else be affected. I tried many ways and this is the only way that worked. Next time maybe i'd start building the server with express, but at this point this is good enough. even though it kind of defeats the purpose of the router in the first place. It works.
+	// Yikes ok this is awful. I would use express for routing but I have to handle http requests and websockets on the same port and I couldn't make websocket endpoints work with express. So I have to route with the stock http server, and I couldn't find a better way than this to make / route to my index file but have nothing else be affected. I tried many ways and this is the only way that worked. Next time maybe i'd start building the server with express, but at this point this is good enough. even though it kind of defeats the purpose of the router in the first place. It works given the time constraint.
 	if(request.url == "/"){
-		console.log("this is it");
 		try {
 			dispatcher.dispatch(request, response);
 		}
@@ -89,11 +67,9 @@ var server = http.createServer(function(request, response) {
 	                response.end(content);
 	            }
 			});
-			//res.download("grids/test.png");
 		});
 	}
 	else{
-		console.log("that aint it");
 		request.addListener('end', function() {
 			file.serve(request, response);
 		}).resume();
@@ -101,8 +77,6 @@ var server = http.createServer(function(request, response) {
 });
 
 dispatcher.onGet("/", function(req, res) {
-	console.log("goin to the index!");
-	// file.serveFile("/public/style.css", 200, {}, req, res);
 	file.serveFile("/artgrid.html", 200, {}, req, res);
 	
 });
@@ -130,13 +104,12 @@ function updateClients(){
 }
 
 function exportGrid(download){
-	// Assuming 8 colors max
+	console.log("Exporting Grid...");
+	// Use Jimp to render a png pixel-by-pixel
 	let image = new Jimp(grid_data[0].length, grid_data.length, function(err, image){
 		if (err) throw err;
 		grid_data.forEach((row, y) => {
 			row.forEach((colorString, x) => {
-				console.log("str: "+colorString);
-				console.log("hex: "+strToHex(colorString));
 				image.setPixelColor(strToHex(colorString), x, y);
 			});
 		});
@@ -149,12 +122,13 @@ function exportGrid(download){
 
 	// little helper function to get the right hex value
 	function strToHex(str){
+		// Just in case it tries to render an old version of the grid 
 		if(str == 1){
 			return 0x000000ff;
 		}
 		if(str == 0) return 0xffffffff;
 		if(!str) return 0xffffffff;
-		// Splice off the first #, then parse as a hexadecimal int.
+		// Splice off the first # char, add a 100% alpha channel, then parse as a hexadecimal int.
 		return parseInt(str.substring(1)+"FF", 16);
 	}
 }
@@ -163,40 +137,41 @@ wsServer.on('request', function(request) {
 	console.log("Connection from origin " + request.origin);
 	var connection = request.accept(null, request.origin);
 	var index = clients.push(connection) - 1;
+	console.log(clients.length + " users connected.");
+	console.log(clients);
 
 	//Send the grid automatically on connection
 	let gridJson = JSON.stringify({type: "grid", grid: grid_data});
 	connection.sendUTF(gridJson);
 
-	//Also send new number (for now) of clients
+	//Also send new number of clients
 	updateClients();
 
 	//Handle user communication
 	connection.on('message', function(message){
 		//process websocket message
-		console.log("JSON RECIEVED: ");
-		console.log(message);
 		var json = JSON.parse(message.utf8Data);
-		console.log(json);
 
 		if(json.type == "cellUpdate"){
 			// Update the grid in server memory
 			// TODO: validate
-			
 			grid_data[json.y][json.x] = json.value;
+
 			//broadcast the same message to all clients
 			for (var i=0; i<clients.length; i++) {
 				clients[i].sendUTF(JSON.stringify(json));
 			}
 
 			// Or try just sending the whole grid back
-			//sendGrid();
+			// sendGrid();
 		}
 		else if(json.type == "message"){
+			// For debugging
+			console.log("Message received:");
 			console.log(json.message);
 		}
 		else{
-			console.log("Unexpected json type");
+			console.log("Unexpected json type:");
 			console.log(json.type);
 			return;
 		}
@@ -204,13 +179,14 @@ wsServer.on('request', function(request) {
 	});
 
 	connection.on('close', function(connection) {
-		console.log("disconnection");
+		console.log("Disconnection from ", connection);
 		// get rid of client
 		clients.splice(clients.indexOf(connection), 1);
 		updateClients();
 	});
 });
 
+// This doesn't ever happen. TODO: Figure out how to exit gracefully
 wsServer.on("SIGTERM", function(){
 	console.log("We're exiting now!");
 	updateDB();
@@ -218,7 +194,7 @@ wsServer.on("SIGTERM", function(){
 
 function sendGrid(){
 	let json = JSON.stringify({type: "grid", grid: grid_data});
-	//broadcast the same message to all clients
+	//broadcast the grid to all clients
 	for (var i=0; i<clients.length; i++) {
 		clients[i].sendUTF(json);
 	}
@@ -226,11 +202,9 @@ function sendGrid(){
 
 function updateDB(){
 	console.log("Updating database...");
-	//console.log("INSERT INTO grids (grid_data) VALUES (\'"+JSON.stringify(grid_data)+"\');");
 	client.query("INSERT INTO grids (grid_data) VALUES (\'"+JSON.stringify(grid_data)+"\');", (err, res) => {
 		if (err){
-			console.log("db could not be update.")
-			//throw err;
+			console.log("Database could not be update.")
 		} 
 		else{
 			console.log("Done.");
