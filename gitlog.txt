@@ -1,0 +1,347 @@
+commit 8857b3f0147d93064d6570db7133fc71a431c42e
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Dec 4 19:26:09 2018 -0500
+
+    Update everyone with the whole grid every 10 seconds
+
+commit fe79089023f27ba88dfed9b599fc89a8a30d7ff1
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Dec 4 19:22:27 2018 -0500
+
+    Update everyone with the whole grid every 10 seconds
+
+commit 9d73fa711af3931505fe4ca756704b84846e198e
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Dec 4 19:16:24 2018 -0500
+
+    Loading screen
+
+commit cd8045b220d6870d1a17b83131755cdb67e8303d
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Dec 4 17:47:20 2018 -0500
+
+    switched + and -
+
+commit 615d97596d4e8ea5858916935b2592a233539939
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Dec 4 17:43:56 2018 -0500
+
+    Minimizable toolbar instead of draggable. Anchored right
+
+commit f1e73d3c9b375b537bc59ee218a5a5995cbf8d5c
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Dec 4 17:20:37 2018 -0500
+
+    More colors
+
+commit 32678b17d0cf6f4866fa02043f5c16d895040a60
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Dec 4 16:47:44 2018 -0500
+
+    Viewport?
+
+commit 71fba2abc85683581911a1863925b8a767420b4e
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Dec 4 16:37:45 2018 -0500
+
+    Click to draw instead of changing modes
+
+commit 5eafb02851a5584ee3c6e7f6cff9b1a4a3c5588a
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Dec 4 00:20:31 2018 -0500
+
+    lenient touch time
+
+commit fcaa66a155cbca23700f03b73b6a05eae00f1688
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Dec 4 00:15:06 2018 -0500
+
+    variable change
+
+commit a4ed8fb58b6a85bbda28c05c1da8b4143d83764c
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Dec 4 00:11:33 2018 -0500
+
+    variable change
+
+commit 47dcf957055c1a517621a622f0d8180cd7841161
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Dec 4 00:01:26 2018 -0500
+
+    update client grid on load
+
+commit d8fbd1790633bc3692b802ece4b7684049f3d0f3
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 22:57:07 2018 -0500
+
+    Grid updates cell by cell instead of holistically
+
+commit 139bba3a18bfbd14b0636d8bf49ceb75fba40423
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 22:54:27 2018 -0500
+
+    Grid updates cell by cell instead of holistically
+
+commit ee91ddaae5169c1d2325f28a416c326704025e89
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 21:38:27 2018 -0500
+
+    variable names
+
+commit 2bd209a858694d5bd9dbec936392bf7847c3b629
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 21:30:41 2018 -0500
+
+    zooms into the right point the second time
+
+commit 863b0dfbb44d987b31eb6ad655975cc2b6ec4db1
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 21:28:30 2018 -0500
+
+    zooms into the right point the second time
+
+commit c1439fdc6647b89d734cee16ea49fd35aaf0c325
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 21:13:02 2018 -0500
+
+    fixed stupid gridcoords conversion
+
+commit 23a3f22a9efa9e3a469315d3fc194f1753befc50
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 21:00:16 2018 -0500
+
+    logs
+
+commit fd9de5dd5fd55b9fcb3885d4ce5c405d78406ab5
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 20:57:27 2018 -0500
+
+    logs
+
+commit e22233722712f65256e87ab24f2083d0d523f43b
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 20:54:08 2018 -0500
+
+    just do the first point??? idk
+
+commit 6ea020b9455a9c54f6a9ac536b79d9956ede349d
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 20:49:26 2018 -0500
+
+    added some logs
+
+commit 93a71ae5f7247888883f99574b701db4e8b9f6f1
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 20:48:19 2018 -0500
+
+    added some logs
+
+commit f1f982fa54d8e12b7c336f67e8267ae114da22fa
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 20:43:05 2018 -0500
+
+    fixed variable name
+
+commit 54af07c8e7f880cc659534c6cf980c14e8268244
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 20:41:54 2018 -0500
+
+    fixed variable name
+
+commit 081d508883f4794be27d8aab124239f33f0478b5
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 20:34:59 2018 -0500
+
+    changed touch dx calculation
+
+commit bc743fdc1a28187c4bba6db404ad9a2526377abf
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 19:49:38 2018 -0500
+
+    Destroyed all touch movement replacd with log
+
+commit 8d52320dc546bd0e0a370a3f5ba079ceb043ff80
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 19:48:54 2018 -0500
+
+    Destroyed all touch movement replacd with log
+
+commit dbfe249ab2a53cf11773ec2146c4d5bd59dea467
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 16:42:24 2018 -0500
+
+    Shotinthedark attempt at mobile zoom.
+
+commit a47a0ab224985ea7ef52814d5a75a2dc5f0456cd
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 01:06:28 2018 -0500
+
+    Mobile draw support
+
+commit 921fbfa252ae8920aa6989d8954b25142b30df83
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Dec 3 00:45:07 2018 -0500
+
+    Prelim mobile support
+
+commit e29f84eafa5e670c42e8a223afe3818c904c7e61
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Sat Dec 1 18:43:17 2018 -0500
+
+    deleted ? from /export
+
+commit d9016e97d53a908d44ef401b6b1a455523cdc718
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Sat Dec 1 18:37:06 2018 -0500
+
+    Tried to add some routing and make export work with http server (no express)
+
+commit 079b9e0da501643a83894817105c887f49ef2a9c
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Fri Nov 30 22:18:57 2018 -0500
+
+    lowercase j
+
+commit 9cf633a2c2ead277fe7439d2fc03e155cc126d3c
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Fri Nov 30 22:16:25 2018 -0500
+
+    deleted fake jimp
+
+commit fabaf2e7ca74bfb57e3c7a31ffc814c39f097c3c
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Fri Nov 30 22:14:59 2018 -0500
+
+    Different jimp?
+
+commit 5f145d2c435f7f0bca73af77f73d54c17e1b2ad0
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Fri Nov 30 22:09:49 2018 -0500
+
+    Export serves rendered file
+
+commit e3e36b67681e7e323f067c4a2278a5477df20902
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Fri Nov 30 15:20:28 2018 -0500
+
+    Export function which saves image to disk, doesn't serve yet
+
+commit a2cc5f8ae6eba5adc176a21635da6008d87828c1
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Fri Nov 30 03:23:34 2018 -0500
+
+    Added support for different colors
+
+commit 5ec86cdb9d9b6fc60659fa2c5a195a05d5745589
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Fri Nov 30 00:52:15 2018 -0500
+
+    Cleaned up logs
+
+commit 89d161d5d6ef66259dfa600f20489094816a7e7b
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Fri Nov 30 00:36:29 2018 -0500
+
+    Sorting grid data in right order
+
+commit 3c7bf19ce6ad71c98717f28d33791e47634c24b9
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Fri Nov 30 00:15:30 2018 -0500
+
+    Database should work?
+
+commit 8c6e21c6a401a9aa9f3ab6d388678bf0ef0c6294
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Fri Nov 30 00:05:40 2018 -0500
+
+    Gets grid from and updates to database
+
+commit 0dad1ef3d441b68d78737de8560828173dd3c02f
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Thu Nov 29 22:36:38 2018 -0500
+
+    Database attempt
+
+commit 1d8a59f035474123769ee5174102c0cd0b50eabe
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Nov 27 17:18:28 2018 -0500
+
+    minmaxed zooming
+
+commit a833e835c0f1e435383bb9ee1e0a9274003c5ade
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Nov 27 17:02:35 2018 -0500
+
+    reversed scrolling direction
+
+commit e6a2100c9634a804fc6b79bd797b350d2c45b684
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Nov 27 16:59:44 2018 -0500
+
+    Aesthetic Html Changes, changed default zoom and origin
+
+commit 0166a0bd118b65924c356055de98442b9396676b
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Nov 27 16:45:53 2018 -0500
+
+    Added instructions, info display, two-way drawing
+
+commit 36f4cc05d5bba732b801c6e595d377cf074633c7
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Nov 27 15:50:55 2018 -0500
+
+    secure wss
+
+commit 9a8b12463a2c4f913f7e49e4adbcc606486a5cb6
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Nov 27 15:41:27 2018 -0500
+
+    fucko
+
+commit 87c66eda9e837d9a24c7ee0ef14f130beb962cee
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Nov 27 15:39:22 2018 -0500
+
+    No port in frontend
+
+commit 57909323b6d984c25855a53543045867c0b1da30
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Nov 27 15:27:07 2018 -0500
+
+    that again, in the right file
+
+commit 57858f08cfddce909df5fecc03d1d882d738ba4a
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Nov 27 15:25:00 2018 -0500
+
+    server name
+
+commit e7a1022df78ce54585258ee571114632c2fb9755
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Nov 27 15:23:35 2018 -0500
+
+    localizes jquery
+
+commit ab68c399ebaf61cfc3204580b43be1f0032d5431
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Nov 27 15:22:11 2018 -0500
+
+    another try
+
+commit e70367fd37c21528f5a1bf131c4172a526f00742
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Nov 27 15:17:52 2018 -0500
+
+    Implements node static server
+
+commit 662344edf07fe4508301eec758648d5e08c3cd11
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Tue Nov 27 01:40:32 2018 -0500
+
+    A commit
+
+commit fd387128f50fc3cb0c0907dc79c8e8fe1f3c36b9
+Author: Ben Dreier <benjdreier@gmail.com>
+Date:   Mon Nov 26 18:49:19 2018 -0500
+
+    First Commit
