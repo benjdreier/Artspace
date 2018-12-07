@@ -70,7 +70,7 @@ if (!window.WebSocket) {
 // open connection
 
 // Connection via heroku
-var connection = new WebSocket('wss://damp-savannah-54651.herokuapp.com');
+var connection = null;//new WebSocket('wss://damp-savannah-54651.herokuapp.com');
 
 // TEST CONNECTION via localhost
 if(!connection){
@@ -107,6 +107,9 @@ connection.onmessage = function(message){
     	// Just update individual pixels, not the entire grid.
     	grid[json.y][json.x] = json.value;
     	drawGrid();
+    }
+    else if(json.type == "ping"){
+    	online = true;
     }
     else if(json.type == "grid"){
     	grid = json.grid;
@@ -443,5 +446,18 @@ function clear(){
 	ctx.fillRect(0,0,canvas.width,canvas.height);
 	ctx.fillStyle = oldStyle;
 }
+
+// This is how we're gonna make sure the client is working
+
+// function ping(){
+// 	var online = false;
+// 	let ping = Json.stringify({"type": "ping"});
+// 	connection.send(ping);
+// 	setTimeout(function() {
+// 		if(!online){
+
+// 		}
+// 	}, 1000)
+// }
 
 });

@@ -17,7 +17,8 @@ console.log(process.env.DATABASE_URL);
 
 client.connect();
 
-var clients = [];
+var clients = {};
+var count = 0;
 
 var grid_data;
 
@@ -94,7 +95,7 @@ wsServer = new WebSocketServer({
 });
 
 function updateClients(){
-	for (var i=0; i<clients.length; i++) {
+	for (var i in clients) {
 		clientJson = JSON.stringify({
 			type: "clients",
 			number: clients.length
@@ -136,8 +137,9 @@ function exportGrid(download){
 wsServer.on('request', function(request) {
 	console.log("Connection from origin " + request.origin);
 	var connection = request.accept(null, request.origin);
-	var index = clients.push(connection) - 1;
-	console.log(clients.length + " users connected.");
+	var id = count++;
+	clients[id] = connection;
+	console.log("Connection accepted with id ", id);
 
 	//Send the grid automatically on connection
 	let gridJson = JSON.stringify({type: "grid", grid: grid_data});
@@ -157,7 +159,7 @@ wsServer.on('request', function(request) {
 			grid_data[json.y][json.x] = json.value;
 
 			//broadcast the same message to all clients
-			for (var i=0; i<clients.length; i++) {
+			for (var i in clients) {
 				clients[i].sendUTF(JSON.stringify(json));
 			}
 
@@ -182,8 +184,10 @@ wsServer.on('request', function(request) {
 		// let json = JSON.stringify({"type": "message", "message": "YOU DISCONNECTED"});
 		// connection.sendUTF(json);
 		// get rid of client
-		clients.splice(clients.indexOf(connection), 1);
-		updateClients();
+		//clients.splice(clients.indexOf(connection), 1);
+		//updateClients();
+		console.log("With ID:", id);
+		delete clients[id];
 	});
 });
 
@@ -196,7 +200,7 @@ wsServer.on("SIGTERM", function(){
 function sendGrid(){
 	let json = JSON.stringify({type: "grid", grid: grid_data});
 	//broadcast the grid to all clients
-	for (var i=0; i<clients.length; i++) {
+	for (var i in clients) {
 		clients[i].sendUTF(json);
 	}
 }
