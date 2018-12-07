@@ -70,7 +70,7 @@ if (!window.WebSocket) {
 // open connection
 
 // Connection via heroku
-var connection = null;//new WebSocket('wss://damp-savannah-54651.herokuapp.com');
+var connection = new WebSocket('wss://damp-savannah-54651.herokuapp.com');
 
 // TEST CONNECTION via localhost
 if(!connection){
